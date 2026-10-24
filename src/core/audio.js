@@ -1,0 +1,258 @@
+import { speechSchedule } from "./audio-timing.js";
+import { languages } from "./i18n.js";
+import { audioManifest } from "./audio-manifest.js";
+import { readSetting, writeSetting } from "./storage.js";
+export class GameAudio {
+  constructor() {
+    const savedVolume = Number(readSetting("bwa-volume", "100"));
+    this.volume = Number.isFinite(savedVolume)
+      ? Math.max(0, Math.min(250, savedVolume))
+      : 100;
+    this.muted = readSetting("bwa-muted") === "1" || this.volume === 0;
+    this.hebrewVoice = readSetting("bwa-hebrew-voice-v2", "recorded");
+    this.context = null;
+    this.master = null;
+    this.voices = [];
+    this.generation = 0;
+    this.sources = new Set();
+    this.buffers = new Map();
+    this.utterance = null;
+    this.onStatus = () => {};
+    this.status = "idle";
+    this.refreshVoices();
+    window.speechSynthesis?.addEventListener("voiceschanged", () =>
+      this.refreshVoices(),
+    );
+  }
+  refreshVoices() {
+    this.voices = window.speechSynthesis?.getVoices() || [];
+  }
+  voice(locale) {
+    return (
+      this.voices.find((voice) =>
+        voice.lang.toLowerCase().startsWith(locale),
+      ) || null
+    );
+  }
+  hasHebrewDeviceVoice() {
+    this.refreshVoices();
+    return Boolean(this.voice("he"));
+  }
+  setHebrewVoice(mode) {
+    if (mode !== "device" && mode !== "recorded") return;
+    this.stop();
+    this.hebrewVoice = mode;
+    writeSetting("bwa-hebrew-voice-v2", mode);
+  }
+  async unlock() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!this.context && AudioContext) this.context = new AudioContext();
+    if (this.context && !this.master && this.context.createGain) {
+      this.master = this.context.createGain();
+      this.master.gain.value = this.volume / 100;
+      if (this.context.createDynamicsCompressor) {
+        const limiter = this.context.createDynamicsCompressor();
+        limiter.threshold.value = -1;
+        limiter.knee.value = 0;
+        limiter.ratio.value = 20;
+        limiter.attack.value = 0.002;
+        limiter.release.value = 0.1;
+        this.master.connect(limiter).connect(this.context.destination);
+      } else this.master.connect(this.context.destination);
+    }
+    if (this.context && this.context.state !== "running")
+      await this.context.resume();
+    this.refreshVoices();
+  }
+  notify(status) {
+    this.status = status;
+    this.onStatus(status);
+  }
+  stop() {
+    this.generation++;
+    for (const source of this.sources) source.stop();
+    this.sources.clear();
+    window.speechSynthesis?.cancel();
+    this.utterance = null;
+    this.notify(this.muted ? "muted" : "idle");
+  }
+  setMuted(value) {
+    this.muted = value;
+    if (!value && this.volume === 0) {
+      this.volume = 100;
+      writeSetting("bwa-volume", "100");
+      this.updateGain();
+    }
+    writeSetting("bwa-muted", value ? "1" : "0");
+    this.stop();
+  }
+  updateGain() {
+    if (!this.master) return;
+    if (this.master.gain.setTargetAtTime)
+      this.master.gain.setTargetAtTime(
+        this.volume / 100,
+        this.context.currentTime,
+        0.02,
+      );
+    else this.master.gain.value = this.volume / 100;
+  }
+  setVolume(value) {
+    const volume = Math.round(Number(value));
+    if (!Number.isFinite(volume)) return;
+    const wasMuted = this.muted;
+    this.volume = Math.max(0, Math.min(250, volume));
+    this.muted = this.volume === 0;
+    writeSetting("bwa-volume", String(this.volume));
+    writeSetting("bwa-muted", this.muted ? "1" : "0");
+    this.updateGain();
+    if (this.muted) this.stop();
+    else if (wasMuted) this.notify("idle");
+  }
+  async buffer(path) {
+    if (this.buffers.has(path)) return this.buffers.get(path);
+    let decoded;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        const url = new URL(`../../${path}`, import.meta.url);
+        // A retry bypasses both the browser HTTP cache and our service worker cache.
+        const response = await fetch(url, {
+          cache: attempt ? "reload" : "default",
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`Audio HTTP ${response.status}`);
+        decoded = await this.context.decodeAudioData(
+          await response.arrayBuffer(),
+        );
+        break;
+      } catch (error) {
+        if (attempt === 1) throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    // Bound decoded PCM memory; compressed files are retained by the service worker.
+    if (this.buffers.size >= 24)
+      this.buffers.delete(this.buffers.keys().next().value);
+    this.buffers.set(path, decoded);
+    return decoded;
+  }
+  async speak(input, locale) {
+    this.stop();
+    if (this.muted) return false;
+    const generation = this.generation;
+    const parts = Array.isArray(input) ? input : [input];
+    if (locale === "he" && this.hebrewVoice === "device") {
+      this.refreshVoices();
+      const deviceVoice = this.voice("he");
+      if (deviceVoice && this.speakSystem(parts, locale, deviceVoice, generation))
+        return true;
+    }
+    return this.speakRecorded(parts, locale, generation);
+  }
+  speakSystem(parts, locale, voice, generation) {
+    if (!window.speechSynthesis || !window.SpeechSynthesisUtterance)
+      return false;
+    const utterance = new window.SpeechSynthesisUtterance(parts.join(" "));
+    utterance.voice = voice;
+    utterance.lang = languages.find((lang) => lang.code === locale).tag;
+    utterance.rate = 1;
+    utterance.volume = Math.min(1, this.volume / 100);
+    utterance.onend = () => {
+      if (generation === this.generation) {
+        this.utterance = null;
+        this.notify("idle");
+      }
+    };
+    utterance.onerror = () => {
+      if (generation === this.generation) {
+        this.utterance = null;
+        if (locale === "he") void this.speakRecorded(parts, locale, generation);
+        else this.notify("error");
+      }
+    };
+    try {
+      this.utterance = utterance;
+      this.notify("speaking");
+      window.speechSynthesis.speak(utterance);
+      return true;
+    } catch {
+      this.utterance = null;
+      return false;
+    }
+  }
+  async speakRecorded(parts, locale, generation) {
+    this.notify("loading");
+    try {
+      await this.unlock();
+      if (!this.context || this.context.state !== "running")
+        throw new Error("Audio requires a tap");
+      // Download together; play sequentially without words interrupting one another.
+      const buffers = await Promise.all(
+        parts.map((text) => {
+          const path = audioManifest[locale]?.[text];
+          if (!path) throw new Error(`Missing recording: ${locale}/${text}`);
+          return this.buffer(path);
+        }),
+      );
+      if (generation !== this.generation) return false;
+      const schedule = speechSchedule(buffers, this.context.currentTime);
+      this.notify("speaking");
+      await new Promise((resolve) => {
+        schedule.forEach((entry, index) => {
+          const source = this.context.createBufferSource();
+          this.sources.add(source);
+          source.buffer = entry.buffer;
+          source.playbackRate.value = entry.rate;
+          source.connect(this.master || this.context.destination);
+          source.onended = () => {
+            this.sources.delete(source);
+            if (index === schedule.length - 1) resolve();
+          };
+          source.start(entry.at, entry.offset, entry.duration);
+        });
+      });
+      if (generation === this.generation) this.notify("idle");
+      return true;
+    } catch {
+      if (generation !== this.generation) return false;
+      // Never silently switch Hebrew to a different pronunciation engine.
+      this.refreshVoices();
+      const voice = locale === "he" ? null : this.voice(locale);
+      if (voice && this.speakSystem(parts, locale, voice, generation))
+        return true;
+      this.notify("error");
+      return false;
+    }
+  }
+  tone(frequency, when, duration, gain = 0.08) {
+    if (!this.context || this.muted || this.context.state !== "running") return;
+    const oscillator = this.context.createOscillator(),
+      volume = this.context.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(frequency, when);
+    volume.gain.setValueAtTime(0.001, when);
+    volume.gain.exponentialRampToValueAtTime(gain, when + 0.02);
+    volume.gain.exponentialRampToValueAtTime(0.001, when + duration);
+    oscillator.connect(volume).connect(this.master || this.context.destination);
+    oscillator.start(when);
+    oscillator.stop(when + duration + 0.02);
+  }
+  effect(kind) {
+    if (!this.context || this.muted) return;
+    const now = this.context.currentTime;
+    if (kind === "right")
+      [523, 659, 784].forEach((note, i) =>
+        this.tone(note, now + i * 0.12, i === 2 ? 0.24 : 0.13),
+      );
+    else if (kind === "star")
+      [523, 659, 784, 1047].forEach((note, i) =>
+        this.tone(note, now + i * 0.12, 0.25),
+      );
+    else {
+      this.tone(320, now, 0.14, 0.035);
+      this.tone(270, now + 0.1, 0.14, 0.025);
+    }
+  }
+}

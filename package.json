@@ -1,0 +1,17 @@
+{
+  "name": "bar-word-adventures",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Everyday words, gestures, listening and letters with Bar in eight languages",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.mjs",
+    "pretest": "node scripts/build.mjs",
+    "deploy": "node scripts/deploy-pages.mjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.12"
+  }
+}
