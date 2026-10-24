@@ -22,6 +22,12 @@ try{
  run('git',[...auth,'push',remote,`${commit}:refs/heads/gh-pages`],{stdio:'inherit'});
  const configuration={build_type:'legacy',source:{branch:'gh-pages',path:'/'}};
  let method='PUT';try{run('gh',['api',`repos/${repository}/pages`]);}catch{method='POST';}
- run('gh',['api','--method',method,`repos/${repository}/pages`,'--input','-'],{input:JSON.stringify(configuration)});
+ try {
+  run('gh',['api','--method',method,`repos/${repository}/pages`,'--input','-'],{input:JSON.stringify(configuration)});
+ } catch (error) {
+  // GitHub can enable Pages automatically between the first GET and POST.
+  if (method !== 'POST' || !String(error.stderr).includes('409')) throw error;
+  run('gh',['api','--method','PUT',`repos/${repository}/pages`,'--input','-'],{input:JSON.stringify(configuration)});
+ }
  console.log('Published branch: https://yogurtcp.github.io/bar-word-adventures/');
 }finally{rmSync(work,{recursive:true,force:true});}
