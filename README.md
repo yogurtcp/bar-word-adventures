@@ -7,13 +7,20 @@ expressions, gestures and letters with pictures, recorded voices and gentle rewa
 There are no math activities, accounts, ads, microphone recordings or pronunciation scores.
 
 Language order: **Spanish, Russian, Hebrew, English, Mandarin Chinese, Japanese, Arabic, Turkish**.
-Choose a learning language on launch; an optional independent helper language adds meanings
-and translated instructions. The globe button switches languages during play and starts a fresh question.
+Choose a learning language on launch. **Instructions and menus default to Hebrew**, with English
+as the other option. **Narrator language** is a separate Hebrew/English setting and also defaults
+to Hebrew. Both controls are available on the launch screen, home screen and in the adult menu. The globe button switches languages during play and starts a fresh question.
+
+For example, learn Spanish with Hebrew text instructions and English spoken guidance.
+Each instruction plays in the narrator language, followed by any example word or letter sound
+in its own learning-language voice. Tapping a Spanish word always plays Spanish, regardless
+of the instruction and narrator settings. Selections persist independently across launches
+and language switches; existing stars, volume and progress are retained.
 
 ## Explore, then practise
 
 - **Picture words:** 86 illustrated words in six themes. Tap to hear a word; its spelling,
-  helper translation and Mandarin pinyin are visible. No stars or tests in the dictionary.
+  translation in the instruction language and Mandarin pinyin are visible. No stars or tests in the dictionary.
 - **Talk with Bar:** nine everyday expressions, including hello, goodbye, yes, no, please
   and thank you. Eight two-frame Bar gesture loops invite imitation. These are ordinary
   expressive gestures, not formal sign language. Speaking practice is self-reported.
@@ -37,8 +44,8 @@ Installation availability depends on the browser and OS.
 
 The entire app shell, all picture atlases, Bar animations and icons cache for offline launches.
 Narration is downloaded as used. To prepare a learning language for fully offline use, open
-**Menu**, answer the adult check, then choose **Download audio for offline play** and wait for completion.
-All 1,739 active narration clips are bundled with the app; there is no online speech service at runtime.
+**Menu**, answer the adult check, then choose **Download learning words and narration for offline play** and wait for completion. This includes both the learning language and the selected narrator.
+All 1,741 active narration clips are bundled with the app; there is no online speech service at runtime.
 
 Settings include volume, three difficulty levels, a gentle-motion switch, optional portrait reactions,
 voice testing, a reproducible Game Lab and progress reset. OS reduced-motion preferences are respected.

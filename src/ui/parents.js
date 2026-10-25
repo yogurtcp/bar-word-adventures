@@ -1,3 +1,4 @@
+import { settingsCopy } from "../core/language-settings.js";
 import { lessonText } from "../core/lessons.js";
 import { node, button } from "../core/helpers.js";
 import { languages, copy, t } from "../core/i18n.js";
@@ -13,7 +14,7 @@ export function createParentUI(app) {
     download = null;
   function showGate() {
     if (gate || !app.locale()) return;
-    const locale = app.locale();
+    const locale = app.uiLocale();
     app.audio.stop();
     const returnFocus = document.activeElement;
     gate = node("dialog", "parent-modal");
@@ -74,23 +75,14 @@ export function createParentUI(app) {
     panel.append(wrapper);
   }
   function showMenu() {
-    const locale = app.locale(),
+    const locale = app.uiLocale(),
       panel = app.panel(t(locale, "parentTitle"));
-    const language = node("select", "setting-select");
-    for (const lang of languages) {
-      const option = node("option", "", `${lang.flag} ${lang.name}`);
-      option.value = lang.code;
-      option.selected = lang.code === locale;
-      language.append(option);
-    }
-    language.addEventListener("change", () => {
-      app.setLanguage(language.value);
-      showMenu();
-    });
-    row(panel, t(locale, "choose"), language);
+    panel.append(app.languageControls({ refresh: showMenu }));
+    const targetLocale = app.locale();
+    const needsHebrew = targetLocale === "he" || app.narratorLocale() === "he";
     const toggle = node("input");
     const volume = volumeControl(app.audio, locale, "parent-volume", () =>
-      app.audio.speak(t(locale, "listenChoose"), locale),
+      app.audio.speak(t(app.narratorLocale(), "listenChoose"), app.narratorLocale()),
     );
     toggle.type = "checkbox";
     toggle.checked = !app.audio.muted;
@@ -126,7 +118,7 @@ export function createParentUI(app) {
       writeSetting("bwa-reactions", portraits.checked ? "1" : "0"),
     );
     row(panel, t(locale, "reactions"), portraits);
-    if (locale === "he") {
+    if (needsHebrew) {
       const hebrewVoice = node("select", "setting-select");
       for (const mode of ["device", "recorded"]) {
         const option = node("option", "", t(locale, `hebrewVoice${mode}`));
@@ -142,23 +134,20 @@ export function createParentUI(app) {
       panel.append(node("p", "panel-note", t(locale, "hebrewVoiceHint")));
     }
     const voice = node("div", "voice-panel");
-    const availability = node("span", "voice-ok", t(locale, "voiceReady"));
+    const availability = node("span", "voice-ok", settingsCopy[locale].voice);
     voice.append(availability);
     function updateVoiceAvailability() {
-      if (locale !== "he") return;
+      if (!needsHebrew) return;
       const missing =
         app.audio.hebrewVoice === "device" &&
         !app.audio.hasHebrewDeviceVoice();
       availability.className = missing ? "voice-warning" : "voice-ok";
       availability.textContent = missing
         ? t(locale, "hebrewVoiceFallback")
-        : t(
-            locale,
-            app.audio.hebrewVoice === "device" ? "hebrewDeviceReady" : "voiceReady",
-          );
+        : app.audio.hebrewVoice === "device" ? t(locale, "hebrewDeviceReady") : settingsCopy[locale].voice;
     }
     updateVoiceAvailability();
-    if (locale === "he")
+    if (needsHebrew)
       window.speechSynthesis?.addEventListener(
         "voiceschanged",
         updateVoiceAvailability,
@@ -169,8 +158,8 @@ export function createParentUI(app) {
     voice.append(
       button("secondary-button", t(locale, "voiceTest"), () =>
         app.audio.speak(
-          t(locale, "listenChoose"),
-          locale,
+          t(app.narratorLocale(), "listenChoose"),
+          app.narratorLocale(),
         ),
       ),
       status,
@@ -179,7 +168,7 @@ export function createParentUI(app) {
     panel.append(button("secondary-button", t(locale, "update"), () => {
       location.href = `./update.html?lang=${locale}`;
     }));
-    panel.append(node("p", "panel-note", "Bar Words · 1.0"));
+    panel.append(node("p", "panel-note", "Bar Words · 1.1"));
     app.audio.onStatus = (value) => {
       status.textContent =
         value === "error"
@@ -191,10 +180,10 @@ export function createParentUI(app) {
               : "";
     };
     panel.append(button("wide-button", t(locale, "install"), app.install));
-    const offline = button("wide-button", t(locale, "offline"), async () => {
+    const offline = button("wide-button", settingsCopy[locale].offline, async () => {
       if (download) return;
       offline.disabled = true;
-      download = downloadLanguage(locale, (done, total) => {
+      download = downloadLanguage([targetLocale, app.narratorLocale()], (done, total) => {
         offline.textContent = `${t(locale, "offlineBusy")} ${Math.round((done / total) * 100)}%`;
       });
       try {
@@ -224,7 +213,7 @@ export function createParentUI(app) {
     );
   }
   function showLab() {
-    const locale = app.locale(),
+    const locale = app.uiLocale(),
       panel = app.panel(t(locale, "debug"));
     panel.append(node("p", "panel-note", t(locale, "debugHint")));
     const seedInput = node("input", "seed-input");
@@ -249,7 +238,7 @@ export function createParentUI(app) {
     panel.append(list, button("secondary-button", t(locale, "menu"), showMenu));
   }
   function showReactions() {
-    const locale = app.locale(),
+    const locale = app.uiLocale(),
       panel = app.panel(t(locale, "reactionPreview")),
       gallery = node("div", "reaction-gallery");
     for (const state of reactionStates) {
@@ -261,13 +250,15 @@ export function createParentUI(app) {
     panel.append(gallery, button("secondary-button", t(locale, "menu"), showMenu));
   }
   function showArtwork() {
-    const locale = app.locale(),
+    const locale = app.uiLocale(),
       panel = app.panel(t(locale, "artPreview")),
       gallery = node("div", "art-gallery");
     for (const item of concepts) {
       const entry = node("figure", "art-preview-card");
-      entry.innerHTML = art(item.id, word(item, locale).display);
-      entry.append(node("figcaption", "", word(item, locale).display));
+      entry.innerHTML = art(item.id, word(item, app.locale()).display);
+      const caption = node("figcaption", "", word(item, app.locale()).display);
+      caption.lang = app.locale(); caption.dir = "auto";
+      entry.append(caption);
       gallery.append(entry);
     }
     panel.append(gallery, button("secondary-button", t(locale, "menu"), showMenu));

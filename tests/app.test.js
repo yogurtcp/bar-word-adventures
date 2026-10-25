@@ -15,12 +15,12 @@ test("children can explore all words, gestures and letters, switch languages mid
  GameAudio.prototype.speak=async(text,locale)=>{spoken.push({text,locale});return true;};GameAudio.prototype.stop=function(){stops++;this.onStatus("idle");};
  try{
   await import('../src/main.js');
-  const choose=(code)=>{const buttons=[...document.querySelectorAll('.language-choice')];assert.deepEqual(buttons.map((button)=>button.lang),languages.map(({tag})=>tag));buttons.find((button)=>button.lang===languages.find((language)=>language.code===code).tag).click();};
+  const choose=(code)=>{const buttons=[...document.querySelectorAll('.language-choice')];assert.deepEqual(buttons.map((button)=>button.dataset.targetLanguage),languages.map(({code})=>code));buttons.find((button)=>button.dataset.targetLanguage===code).click();};
   for(const {code} of languages){
-   choose(code);assert.ok(document.querySelector('.welcome-screen'));assert.equal(document.documentElement.dir,direction(code));assert.ok(document.querySelector('.welcome-install'));
+   choose(code);assert.ok(document.querySelector('.welcome-screen'));assert.equal(document.documentElement.dir,"rtl");assert.ok(document.querySelector('.welcome-install'));
    assert.equal(document.querySelectorAll('.activity-chip').length,games.length);
    document.querySelector('.shelf-words').click();assert.equal(document.querySelectorAll('.dictionary-card').length,concepts.length);document.querySelector('.dictionary-card').click();assert.equal(spoken.at(-1).locale,code);
-   if(code!=='en')assert.equal(document.querySelectorAll('.word-meaning').length,86);
+   if(code!=='he')assert.equal(document.querySelectorAll('.word-meaning').length,86);
    document.querySelector('.home-button').click();document.querySelector('.shelf-phrases').click();assert.equal(document.querySelectorAll('.phrase-card').length,9);assert.equal(document.querySelectorAll('.bar-gesture').length,9);document.querySelector('.phrase-card').click();assert.equal(spoken.at(-1).locale,code);
    document.querySelector('.home-button').click();document.querySelector('.shelf-letters').click();assert.ok(document.querySelectorAll('.alphabet-letter').length>20);assert.ok(document.querySelector('.big-letter'));
    document.querySelector('.home-button').click();document.querySelector('.play-button').click();assert.ok(document.querySelector('.game-screen'));const oldStops=stops;document.querySelector('.language-switch').click();assert.ok(stops>oldStops);assert.equal(document.querySelectorAll('dialog').length,0);

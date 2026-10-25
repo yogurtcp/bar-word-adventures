@@ -364,3 +364,10 @@ Object.assign(copy.en, {
 copy.ru.firstLetterPicture = "С какой буквы начинается название картинки?";
 copy.he.firstLetterPicture = "בְּאֵיזוֹ אוֹת מַתְחִיל שֵׁם הַתְּמוּנָה?";
 copy.en.firstLetterPicture = "What letter does this picture start with?";
+
+// Voice preferences are settings labels, independently of the learning language.
+Object.assign(copy.en, {
+  hebrewVoice: "Hebrew voice", hebrewVoicedevice: "Device voice", hebrewVoicerecorded: "Hila — recorded voice",
+  hebrewVoiceHint: "Choose the voice for Hebrew words. Guided lessons use the bundled recordings to keep each language distinct.",
+  hebrewVoiceFallback: "No Hebrew device voice is available. Using the recordings.", hebrewDeviceReady: "Hebrew device voice available",
+});

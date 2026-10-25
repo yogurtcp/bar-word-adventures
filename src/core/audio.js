@@ -143,7 +143,7 @@ export class GameAudio {
     if (this.muted) return false;
     const generation = this.generation;
     const parts = Array.isArray(input) ? input : [input];
-    if (locale === "he" && this.hebrewVoice === "device") {
+    if (locale === "he" && parts.every((part) => typeof part === "string") && this.hebrewVoice === "device") {
       this.refreshVoices();
       const deviceVoice = this.voice("he");
       if (deviceVoice && this.speakSystem(parts, locale, deviceVoice, generation))
@@ -190,9 +190,11 @@ export class GameAudio {
         throw new Error("Audio requires a tap");
       // Download together; play sequentially without words interrupting one another.
       const buffers = await Promise.all(
-        parts.map((text) => {
-          const path = audioManifest[locale]?.[text];
-          if (!path) throw new Error(`Missing recording: ${locale}/${text}`);
+        parts.map((part) => {
+          const text = typeof part === "string" ? part : part.text;
+          const language = typeof part === "string" ? locale : part.locale;
+          const path = audioManifest[language]?.[text];
+          if (!path) throw new Error(`Missing recording: ${language}/${text}`);
           return this.buffer(path);
         }),
       );
@@ -219,7 +221,7 @@ export class GameAudio {
       if (generation !== this.generation) return false;
       // Never silently switch Hebrew to a different pronunciation engine.
       this.refreshVoices();
-      const voice = locale === "he" ? null : this.voice(locale);
+      const voice = locale === "he" || parts.some((part) => typeof part !== "string") ? null : this.voice(locale);
       if (voice && this.speakSystem(parts, locale, voice, generation))
         return true;
       this.notify("error");

@@ -18,7 +18,7 @@ export const wordCards = {
     const card = picture(item,locale,() => api.audio.speak(word(item,locale).speech,locale),true);
     card.classList.add("study-card"); host.append(card);
     if(api.helperLocale && api.helperLocale !== locale) { const helper=node("p","word-meaning",word(item,api.helperLocale).display);helper.lang=api.helperLocale;helper.dir="auto";host.append(helper); }
-    host.append(button("primary-button said-button",lessonText(locale,"heard"),()=>{if(!api.isComplete?.())api.complete();}));
+    host.append(button("primary-button said-button instruction-control",lessonText(api.instructionLocale || "he","heard"),()=>{if(!api.isComplete?.())api.complete();}));
    }
   };
  }
@@ -58,7 +58,7 @@ export const buildWord = {
       placed.push({element,text:option.text});element.disabled=true;answer.textContent=placed.map(({text})=>text).join("");
       if(placed.length===parts.length){revealWord(hero,item,api);api.complete();}
     },"letter-tile");element.dataset.part=option.index;area.append(element);}
-    host.append(button("text-button",lessonText(locale,"hint"),()=>{scaffold.hidden=false;api.hint?.();}),button("text-button",lessonText(locale,"backspace"),()=>{if(api.isComplete?.())return;const last=placed.pop();if(last)last.element.disabled=false;answer.textContent=placed.map(({text})=>text).join("");}));
+    host.append(button("text-button instruction-control",lessonText(api.instructionLocale || "he","hint"),()=>{scaffold.hidden=false;api.hint?.();}),button("text-button instruction-control",lessonText(api.instructionLocale || "he","backspace"),()=>{if(api.isComplete?.())return;const last=placed.pop();if(last)last.element.disabled=false;answer.textContent=placed.map(({text})=>text).join("");}));
    }
   };
  }
