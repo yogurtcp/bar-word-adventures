@@ -1,5 +1,5 @@
 // Only this app's caches and requests are handled; other Pages apps share the origin.
-const VERSION = "bar-word-adventures-shell-f9362a993452";
+const VERSION = "bar-word-adventures-shell-70a9a89d7a53";
 const AUDIO = "bar-word-adventures-audio-v1";
 const CORE = [
   "./",
@@ -20,6 +20,10 @@ const CORE = [
   "./assets/reactions/sad.webp",
   "./assets/reactions/surprised.webp",
   "./assets/reactions/thinking.webp",
+  "./assets/voice-preview/NOTICE.md",
+  "./assets/voice-preview/blue-female.mp3",
+  "./assets/voice-preview/blue-male.mp3",
+  "./assets/voice-preview/preview.json",
   "./icons/letters-v1-180.png",
   "./icons/letters-v1-192.png",
   "./icons/letters-v1-512.png",
@@ -69,7 +73,8 @@ const CORE = [
   "./src/ui/parents.js",
   "./src/ui/reactions.js",
   "./src/ui/volume.js",
-  "./styles.css"
+  "./styles.css",
+  "./voice-preview.html"
 ];
 async function installShell() {
   const cache = await caches.open(VERSION);
