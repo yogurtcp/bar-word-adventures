@@ -1,3 +1,4 @@
+import { graphemes } from "./writing.js";
 import { settingsCopy } from "./language-settings.js";
 import { lessonText, phrases } from "./lessons.js";
 import { speech as spanish } from "../locales/es.js";
@@ -137,6 +138,24 @@ export const spoken = {
 };
 export const letterSpeech = (locale, letter) =>
   spoken[locale].letters[alphabets[locale].indexOf(letter)];
+// Word-building tiles include lower case, accents, final forms and non-alphabet characters.
+const extraUnitNames = {
+  es: { " ": "espacio", "á": "a con tilde", "é": "e con tilde", "í": "i con tilde", "ó": "o con tilde", "ú": "u con tilde", "ü": "u con diéresis" },
+  en: { " ": "space" }, ru: { " ": "пробел" }, tr: { " ": "boşluk" },
+  he: { " ": "רֶוַח", "ך": "כָּף סוֹפִית", "ם": "מֵם סוֹפִית", "ן": "נוּן סוֹפִית", "ף": "פֵּא סוֹפִית", "ץ": "צָדִי סוֹפִית", "׳": "גֵּרֵשׁ" },
+  ar: { " ": "مَسَافَة", "أ": "أَلِف بِهَمْزَة", "إ": "أَلِف بِهَمْزَة", "آ": "أَلِف مَمْدُودَة", "ؤ": "وَاو بِهَمْزَة", "ئ": "يَاء بِهَمْزَة", "ة": "تَاء مَرْبُوطَة", "ى": "أَلِف مَقْصُورَة", "ء": "هَمْزَة" },
+  ja: { "ゃ": "ちいさい や", "ゅ": "ちいさい ゆ", "ょ": "ちいさい よ", "っ": "ちいさい つ", "ー": "ちょうおん", " ": "くうはく" },
+  zh: { " ": "空格" },
+};
+export function unitSpeech(locale, unit) {
+  let normalized = unit.normalize("NFC");
+  if (["he", "ar"].includes(locale)) normalized = normalized.replace(/\p{M}/gu, "");
+  const extra = extraUnitNames[locale]?.[normalized];
+  if (extra) return extra;
+  const letter = ["en", "es", "ru", "tr"].includes(locale) ? normalized.toLocaleUpperCase(locale) : normalized;
+  // Mandarin characters and kana are pronounced in their native writing system.
+  return letterSpeech(locale, letter) || normalized;
+}
 export const initialSpeech = (locale, letter) =>
   locale === "zh" ? initialPrompt(letter) : t(
     locale,
@@ -154,6 +173,7 @@ export function speechCatalog(locale) {
     ...alphabets[locale].map((letter) => initialSpeech(locale, letter)),
     ...["memoryPairs", "letterOrder", "listenChoose"].map((key) => t(locale, key)),
     ...spoken[locale].letters,
+    ...concepts.flatMap((item) => graphemes(word(item, locale).display, locale).map((unit) => unitSpeech(locale, unit))),
     spoken[locale].first,
     ...["sayIt", "wordChoice", "buildWord", "gesturePrompt"].map((key) => lessonText(locale, key)),
     ...phrases.map((phrase) => phrase.words[locale]),

@@ -3,7 +3,7 @@ import { taskGuidance } from "./core/guidance.js";
 import { lessonText, phrases, topics, topicWords, appleInstallHelp } from "./core/lessons.js";
 import { concepts, word, alphabets } from "./core/content.js";
 import { art } from "./core/art.js";
-import { spoken } from "./core/speech.js";
+import { spoken, letterSpeech } from "./core/speech.js";
 import { barGesture } from "./ui/bar.js";
 import { watchUpdates } from "./core/updates.js";
 import { node, button } from "./core/helpers.js";
@@ -299,7 +299,7 @@ function startTask({ gameId = activeGame, seed = null, practice = false } = {}) 
   questionRow.append(title, reaction.element);
   stage.append(questionRow);
   if (guidance.targetSound) {
-    const sound = targetElement(node("div", "target-sound", guidance.targetSound));
+    const sound = targetElement(button("target-sound target-sound-button", guidance.targetSound, () => audio.speak(letterSpeech(locale, guidance.targetSound), locale)));
     stage.append(sound);
   }
   const audioStatus = node("div", "audio-status");

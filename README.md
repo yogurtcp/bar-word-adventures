@@ -30,7 +30,11 @@ and language switches; existing stars, volume and progress are retained.
   first letters, shared starting letters, building words, letter order, clue cards and gesture matching.
   Choose a specific activity on the home screen or play a shuffled mix of all ten.
   Letter-order prompts say the letters in order in the learning language; replay repeats them,
-  and every letter tap says that letter’s name, including mistakes.
+  and every letter tap says that letter’s name, including mistakes. First-letter choices and
+  word-building tiles also pronounce their letters/characters; a correct final tile says its
+  name before the complete word, without interrupting either clip. The starting-sound cue
+  is tappable to hear it again. Accents, Hebrew final forms, Arabic variants, small kana,
+  Mandarin characters and spaces have explicit pronunciation support.
 
 Word building uses whole grapheme clusters, keeping combining marks attached, and shapes
 completed Arabic/Hebrew words in their native direction. Beginner tasks show the target spelling;
@@ -47,7 +51,7 @@ Installation availability depends on the browser and OS.
 The entire app shell, all picture atlases, Bar animations and icons cache for offline launches.
 Narration is downloaded as used. To prepare a learning language for fully offline use, open
 **Menu**, answer the adult check, then choose **Download learning words and narration for offline play** and wait for completion. This includes both the learning language and the selected narrator.
-All 1,741 active narration clips are bundled with the app; there is no online speech service at runtime.
+All 1,876 active narration clips are bundled with the app; there is no online speech service at runtime.
 
 Settings include volume, three difficulty levels, a gentle-motion switch, optional portrait reactions,
 voice testing, a reproducible Game Lab and progress reset. OS reduced-motion preferences are respected.

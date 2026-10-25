@@ -1,4 +1,4 @@
-import { firstSpeech } from "../core/speech.js";
+import { firstSpeech, letterSpeech } from "../core/speech.js";
 import { concepts, earlyLetters, word } from "../core/content.js";
 import { pick, sample, shuffle } from "../core/helpers.js";
 import { art } from "../core/art.js";
@@ -36,9 +36,13 @@ export const firstLetter = {
             letter,
             () => {
               if (api.isComplete?.()) return;
-              if (letter !== answer) return api.wrong(element);
+              const pronunciation = letterSpeech(locale, letter);
+              if (letter !== answer) {
+                api.audio.speak(pronunciation, locale);
+                return api.wrong(element);
+              }
               element.classList.add("selected");
-              revealWord(visual, item, api);
+              revealWord(visual, item, api, { beforeSpeech: [pronunciation] });
               api.complete();
             },
             "letter-tile",
