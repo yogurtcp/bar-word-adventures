@@ -626,7 +626,8 @@ export const audioManifest = {
     "הַבֵּט!": "audio/he/0cc4c5d9dd4b279d.mp3",
     "כָּל הַכָּבוֹד!": "audio/he/f5b2241ab225b486.mp3",
     "תּוֹדָה!": "audio/he/5738fb3c8a6f5678.mp3",
-    "בְּבַקָּשָׁה!": "audio/he/6c4a9c04557447b3.mp3"
+    "בְּבַקָּשָׁה!": "audio/he/6c4a9c04557447b3.mp3",
+    "בחר את כל התמונות ששמן מתחיל באות או בצליל הזה.": "audio/he/67eb981590eb2b82.mp3"
   },
   "en": {
     "dog": "audio/en/4c7222902ae7d65e.mp3",
@@ -833,7 +834,8 @@ export const audioManifest = {
     "Look!": "audio/en/bd080d704ff78ffd.mp3",
     "Well done!": "audio/en/28f88f36d05a0ae8.mp3",
     "Thank you!": "audio/en/f6ea4a2bb989ccbb.mp3",
-    "Please!": "audio/en/3c584822b2a07af6.mp3"
+    "Please!": "audio/en/3c584822b2a07af6.mp3",
+    "Choose every picture whose name starts with this letter or sound.": "audio/en/6697d817de0c2ec4.mp3"
   },
   "zh": {
     "狗": "audio/zh/70b10473ac55cdee.mp3",

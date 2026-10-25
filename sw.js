@@ -1,5 +1,5 @@
 // Only this app's caches and requests are handled; other Pages apps share the origin.
-const VERSION = "bar-word-adventures-shell-64d65d2e3825";
+const VERSION = "bar-word-adventures-shell-86b0aabeb393";
 const AUDIO = "bar-word-adventures-audio-v1";
 const CORE = [
   "./",
@@ -27,8 +27,10 @@ const CORE = [
   "./src/core/audio.js",
   "./src/core/clues.js",
   "./src/core/content.js",
+  "./src/core/guidance.js",
   "./src/core/helpers.js",
   "./src/core/i18n.js",
+  "./src/core/language-settings.js",
   "./src/core/lessons.js",
   "./src/core/lifecycle.js",
   "./src/core/offline.js",

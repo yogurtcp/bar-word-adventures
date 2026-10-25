@@ -1,3 +1,4 @@
+import { settingsCopy } from "./language-settings.js";
 import { lessonText, phrases } from "./lessons.js";
 import { speech as spanish } from "../locales/es.js";
 import { speech as arabic } from "../locales/ar.js";
@@ -154,6 +155,7 @@ export function speechCatalog(locale) {
     spoken[locale].first,
     ...["sayIt", "wordChoice", "buildWord", "gesturePrompt"].map((key) => lessonText(locale, key)),
     ...phrases.map((phrase) => phrase.words[locale]),
+    ...(["he", "en"].includes(locale) ? [settingsCopy[locale].initialSound] : []),
   ];
   return [...new Set(values)];
 }

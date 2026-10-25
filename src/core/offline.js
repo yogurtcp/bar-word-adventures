@@ -2,7 +2,8 @@ import { audioManifest } from "./audio-manifest.js";
 export const AUDIO_CACHE = "bar-word-adventures-audio-v1";
 export async function downloadLanguage(locale, onProgress = () => {}) {
   const cache = await caches.open(AUDIO_CACHE);
-  const paths = Object.values(audioManifest[locale]);
+  const locales = Array.isArray(locale) ? locale : [locale];
+  const paths = [...new Set(locales.flatMap((code) => Object.values(audioManifest[code])))];
   let done = 0;
   // Small batches keep the UI responsive and avoid hundreds of simultaneous requests.
   for (let i = 0; i < paths.length; i += 4)

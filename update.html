@@ -8,7 +8,7 @@
 body{margin:0;background:#fff9ef;color:#28324b;font:18px/1.5 system-ui,sans-serif;display:grid;min-height:100svh;place-items:center}main{margin:24px;padding:28px;max-width:540px;border:3px solid #28324b;border-radius:28px;background:white}h1{font-size:28px}button,a{display:inline-block;padding:14px 22px;border:2px solid #28324b;border-radius:16px;background:#ffe176;color:#28324b;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}button:disabled{opacity:.6}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.5 monospace}a[hidden]{display:none}select{font:inherit;padding:8px;border-radius:10px}
 </style>
 </head><body><main>
-<select id="language" aria-label="Language"><option value="es">🇪🇸 Español</option><option value="ru">🇷🇺 Русский</option><option value="he">🇮🇱 עִבְרִית</option><option value="en">🇺🇸 English</option><option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option><option value="ar">🇸🇦 العَرَبِيَّة</option><option value="tr">🇹🇷 Türkçe</option></select>
+<select id="language" aria-label="שפת ההוראות / Instruction language"><option value="he">🇮🇱 עִבְרִית</option><option value="en">🇺🇸 English</option></select>
 <h1 id="title"></h1><p id="note"></p><button id="update"></button><p id="status" role="status"></p><pre id="details" dir="ltr"></pre><a id="play" href="./" hidden></a>
 <script>
 // Independent of the cached game modules, so old installations can reach it.
@@ -23,8 +23,8 @@ const words={
  ru:{title:'Обновление игры',note:'Загрузим свежую версию. Звёзды, настройки и сохранённый звук останутся.',button:'Обновить игру',busy:'Загружаем обновление…',done:'Обновление установлено. Откройте игру.',failed:'Не удалось обновить игру. Проверьте подключение и повторите.',play:'Открыть игру'}
 };
 const select=document.querySelector('#language'),button=document.querySelector('#update'),status=document.querySelector('#status'),details=document.querySelector('#details'),play=document.querySelector('#play');
-let locale=new URLSearchParams(location.search).get('lang');if(!words[locale])locale='en';select.value=locale;
-function render(){locale=select.value;document.documentElement.lang=locale;document.documentElement.dir=['he','ar'].includes(locale)?'rtl':'ltr';for(const id of ['title','note'])document.querySelector('#'+id).textContent=words[locale][id];button.textContent=words[locale].button;play.textContent=words[locale].play;}
+let locale=new URLSearchParams(location.search).get('lang');if(!['he','en'].includes(locale))locale='he';select.value=locale;
+function render(){locale=select.value;document.documentElement.lang=locale;document.documentElement.dir=locale==='he'?'rtl':'ltr';for(const id of ['title','note'])document.querySelector('#'+id).textContent=words[locale][id];button.textContent=words[locale].button;play.textContent=words[locale].play;}
 select.addEventListener('change',render);render();
 function activated(worker){return new Promise((resolve,reject)=>{
  const timeout=setTimeout(()=>finish(new Error('Installation timed out after 90 seconds')),90000);

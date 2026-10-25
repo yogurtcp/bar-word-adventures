@@ -15,7 +15,9 @@ export function picture(item, locale, onClick, showWord = false) {
 }
 export function appendWord(element, item, locale, className = "picture-word") {
   const entry = word(item, locale);
-  element.append(node("span", className, entry.display));
+  const label = node("span", className, entry.display);
+  label.lang = locale; label.dir = "auto";
+  element.append(label);
   if (entry.reading) element.append(node("span", "word-reading", entry.reading));
 }
 export function tile(label, onClick, extraClass = "") {
