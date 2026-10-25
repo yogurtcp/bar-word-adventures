@@ -1,10 +1,10 @@
 """Reuse recordings from the source games; generate only new authored learning phrases.
 Build-only dependency: edge-tts==7.3.1. No runtime speech service or API keys.
 """
-import asyncio,hashlib,json,pathlib,subprocess,unicodedata
+import asyncio,hashlib,json,pathlib,subprocess
 import edge_tts
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-VOICES={'fil':'fil-PH-BlessicaNeural','es':'es-ES-ElviraNeural','ru':'ru-RU-SvetlanaNeural','he':'he-IL-HilaNeural','en':'en-US-AriaNeural','zh':'zh-CN-XiaoxiaoNeural','ja':'ja-JP-NanamiNeural','ar':'ar-SA-ZariyahNeural','tr':'tr-TR-EmelNeural'}
+VOICES={'fil':'fil-PH-BlessicaNeural','es':'es-ES-ElviraNeural','ru':'ru-RU-SvetlanaNeural','en':'en-US-AriaNeural','zh':'zh-CN-XiaoxiaoNeural','ja':'ja-JP-NanamiNeural','ar':'ar-SA-ZariyahNeural','tr':'tr-TR-EmelNeural'}
 catalog=json.loads(subprocess.check_output(['node','scripts/audio-catalog.js'],cwd=ROOT))
 existing=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {audioManifest} from './src/core/audio-manifest.js';console.log(JSON.stringify(audioManifest))"],cwd=ROOT))
 manifest={locale:{} for locale in catalog}
@@ -12,6 +12,13 @@ semaphore=asyncio.Semaphore(4)
 completed=0
 async def generate(locale,text):
  global completed
+ if locale=='he':
+  relative=existing.get('he',{}).get(text)
+  if not relative or '/blue-' not in relative or not (ROOT/relative).is_file():
+   raise ValueError('Generate the local female Hebrew recordings with scripts/generate-hebrew-blue.py first')
+  manifest[locale][text]=relative
+  completed+=1
+  return
  digest=hashlib.sha256((locale+'\n'+text).encode()).hexdigest()[:16]
  relative=existing.get(locale,{}).get(text,f'audio/{locale}/{digest}.mp3')
  manifest[locale][text]=relative
@@ -19,11 +26,11 @@ async def generate(locale,text):
  path.parent.mkdir(parents=True,exist_ok=True)
  async with semaphore:
   if not path.exists() or path.stat().st_size<1000:
-   speech=''.join(c for c in unicodedata.normalize('NFC',text) if not ('\u0591'<=c<='\u05c7' and unicodedata.combining(c))) if locale=='he' else text
+   speech=text
    for attempt in range(5):
     try:
      tmp=path.with_suffix('.tmp')
-     rate='+0%' if locale=='he' else '-12%'
+     rate='-12%'
      volume='-12%'
      if locale=='fil' and text=='Oo!':
       speech='Oo.'

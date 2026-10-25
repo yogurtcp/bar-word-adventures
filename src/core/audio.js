@@ -9,7 +9,7 @@ export class GameAudio {
       ? Math.max(0, Math.min(250, savedVolume))
       : 100;
     this.muted = readSetting("bwa-muted") === "1" || this.volume === 0;
-    this.hebrewVoice = readSetting("bwa-hebrew-voice-v2", "recorded");
+    this.hebrewVoice = readSetting("bwa-hebrew-voice-blue-v1", "recorded");
     this.context = null;
     this.master = null;
     this.voices = [];
@@ -43,7 +43,7 @@ export class GameAudio {
     if (mode !== "device" && mode !== "recorded") return;
     this.stop();
     this.hebrewVoice = mode;
-    writeSetting("bwa-hebrew-voice-v2", mode);
+    writeSetting("bwa-hebrew-voice-blue-v1", mode);
   }
   async unlock() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;

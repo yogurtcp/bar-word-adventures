@@ -306,11 +306,20 @@ test("saved volume boosts recorded speech and effects through a peak limiter", a
 
 test("the new Hebrew release defaults to approved recordings even after an old device preference", () => {
   const originalStorage = globalThis.localStorage;
-  globalThis.localStorage = {getItem(key) { return key === "bwa-hebrew-voice" ? "device" : null; }};
+  globalThis.localStorage = {getItem(key) { return ["bwa-hebrew-voice", "bwa-hebrew-voice-v2"].includes(key) ? "device" : null; }};
   globalThis.window = {};
   try {
     assert.equal(new GameAudio().hebrewVoice, "recorded");
   } finally {
     globalThis.localStorage = originalStorage;
   }
+});
+
+
+test("the approved female Hebrew voice becomes the default without changing saved settings or progress", () => {
+ const oldStorage=globalThis.localStorage;
+ const values=new Map([["bwa-hebrew-voice-v2","device"],["bwa-volume","135"],["bwa-muted","1"],["bwa-progress","saved stars"],["bwa-narrator-language","en"]]);
+ const before=[...values];globalThis.localStorage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)};globalThis.window={};
+ try {const audio=new GameAudio();assert.equal(audio.hebrewVoice,"recorded");assert.equal(audio.volume,135);assert.equal(audio.muted,true);assert.deepEqual([...values],before);}
+ finally{globalThis.localStorage=oldStorage;}
 });

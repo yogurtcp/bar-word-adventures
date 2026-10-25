@@ -13,6 +13,7 @@ test("standalone metadata, dedicated identity, iOS icon and all offline learning
  handlers.install({waitUntil:(promise)=>pending=promise});await pending;assert.ok(skipped);assert.ok(cached.length>50);
  for(const request of cached){assert.equal(request.cache,'reload');const path=new URL(request.url).pathname.replace('/bar-word-adventures/','');assert.ok(existsSync(new URL(`../dist/${path}`,import.meta.url)),path);}
  for(const required of ['assets/bar/gestures-v1.png','assets/bar/crying-v1.png','assets/objects/daily-people.png','src/ui/mistake-pause.js','src/locales/fil.js','src/core/lessons.js','src/games/language.js','src/core/updates.js',...manifest.icons.map(({src})=>src.replace('./','')),touchIcon.replace('./','')])assert.ok(cached.some(({url})=>url.endsWith(required)),required);
+ const {audioManifest}=await import('../src/core/audio-manifest.js');const voiceRelease=JSON.parse(readFileSync(new URL('../scripts/hebrew/blue-recordings.json',import.meta.url)));for(const path of [...Object.values(audioManifest.he),...voiceRelease.previousPaths])assert.ok(cached.some(({url})=>url.endsWith(path)),`Bundled Hebrew clip: ${path}`);
  handlers.activate({waitUntil:(promise)=>pending=promise});await pending;assert.deepEqual(deleted,['bar-word-adventures-shell-old']);assert.ok(claimed);
 });
 test("a failed shell download never replaces a working offline installation",async()=>{
@@ -23,4 +24,24 @@ test("a failed shell download never replaces a working offline installation",asy
 test("the new Bar atlas has true transparency and all eight animations have two frames",()=>{
  const png=readFileSync(new URL('../assets/bar/gestures-v1.png',import.meta.url));assert.equal(png.readUInt32BE(16),png.readUInt32BE(20));assert.equal(png[25],6,'RGBA PNG');
  const css=read('styles.css');assert.match(css,/background-size:400% 400%/);assert.match(css,/prefers-reduced-motion/);assert.match(css,/gentle-motion/);
+});
+
+test("a new Hebrew voice plays offline from its complete release while old voice files stay cached", async () => {
+  const handlers = {};
+  const old = { oldHila: true }, blue = { approvedFemaleVoice: true };
+  let pending, network = 0;
+  const requested = "https://example.com/game/audio/he/blue-new.mp3";
+  vm.runInNewContext(read('sw.js'), {
+    URL, Request, Promise,
+    self: { registration: {scope: "https://example.com/game/"}, addEventListener: (name, fn) => handlers[name] = fn },
+    caches: {open: async (name) => ({
+      match: async (request) => name.includes("audio-v1")
+        ? (request.url.endsWith("old-hila.mp3") ? old : undefined)
+        : request.url === requested ? blue : undefined,
+    })},
+    fetch: async () => { network++; throw Error("offline"); },
+  });
+  handlers.fetch({request: {method: "GET", cache: "default", url: requested}, respondWith: (promise) => pending = promise});
+  assert.equal(await pending, blue);
+  assert.equal(network, 0);
 });

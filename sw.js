@@ -59,6 +59,16 @@ self.addEventListener("fetch", (event) => {
         } catch {
           /* Audio still works if storage is unavailable. */
         }
+        // The new Hebrew voice is bundled with the release. A previously installed
+        // app can play it offline immediately, even though its old audio cache
+        // contains only recordings from an earlier voice.
+        if (event.request.cache !== "reload") {
+          try {
+            const shell = await caches.open(VERSION);
+            const bundled = await shell.match(event.request, { ignoreSearch: true });
+            if (bundled) return bundled;
+          } catch { /* Network playback can still work without storage. */ }
+        }
         const response = await fetch(event.request);
         if (response.ok && cache) {
           try {

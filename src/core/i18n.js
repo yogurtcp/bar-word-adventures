@@ -320,9 +320,9 @@ Object.assign(copy.he, {
   reactionNames: { thinking: "חוֹשְׁבִים", happy: "יֵשׁ!", sad: "נְנַסֶּה שׁוּב", surprised: "וָאוּ!", oops: "אוֹפְּס!", celebrating: "חוֹגְגִים!" },
   hebrewVoice: "קוֹל עִבְרִי",
   hebrewVoicedevice: "קוֹל הַמַּכְשִׁיר",
-  hebrewVoicerecorded: "הִילָה — קוֹל מוּקְלָט",
+  hebrewVoicerecorded: "BlueTTS — קוֹל נָשִׁי מוּקְלָט",
   hebrewVoiceHint:
-    "הַאֲזִינוּ לְדֻגְמָה וּבַחֲרוּ קוֹל. קוֹל הַמַּכְשִׁיר עָשׂוּי לְהִתְעַלֵּם מֵהַנִּקּוּד וּלְהַנְמִיךְ מוּזִיקָה אַחֶרֶת. הַקּוֹל הַמּוּקְלָט הוּא הַקּוֹל הָעִבְרִי שֶׁל הִילָה.",
+    "הַאֲזִינוּ לְדֻגְמָה וּבַחֲרוּ קוֹל. קוֹל הַמַּכְשִׁיר עָשׂוּי לְהִתְעַלֵּם מֵהַנִּקּוּד וּלְהַנְמִיךְ מוּזִיקָה אַחֶרֶת. הַקּוֹל הַמּוּקְלָט הוּא הַקּוֹל הַנָּשִׁי הָעִבְרִי שֶׁל BlueTTS.",
   hebrewVoiceFallback:
     "לֹא נִמְצָא קוֹל עִבְרִי בַּמַּכְשִׁיר. מַשְׁמִיעִים אֶת הַקּוֹל הַמּוּקְלָט.",
   hebrewDeviceReady: "קוֹל עִבְרִי זָמִין בַּמַּכְשִׁיר",
@@ -370,7 +370,7 @@ copy.en.firstLetterPicture = "What letter does this picture start with?";
 
 // Voice preferences are settings labels, independently of the learning language.
 Object.assign(copy.en, {
-  hebrewVoice: "Hebrew voice", hebrewVoicedevice: "Device voice", hebrewVoicerecorded: "Hila — recorded voice",
+  hebrewVoice: "Hebrew voice", hebrewVoicedevice: "Device voice", hebrewVoicerecorded: "BlueTTS — female recorded voice",
   hebrewVoiceHint: "Choose the voice for Hebrew words. Guided lessons use the bundled recordings to keep each language distinct.",
   hebrewVoiceFallback: "No Hebrew device voice is available. Using the recordings.", hebrewDeviceReady: "Hebrew device voice available",
 });

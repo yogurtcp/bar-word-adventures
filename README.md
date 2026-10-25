@@ -75,7 +75,8 @@ Arabic ب, Turkish Ğ and Filipino Ng. Its original vector source is [letters-v1
 Installation availability depends on the browser and OS.
 
 The entire app shell, all picture atlases, Bar animations and icons cache for offline launches.
-Narration is downloaded as used. To prepare a learning language for fully offline use, open
+Hebrew narration is included in the complete offline release. Other narration downloads as used.
+To prepare a learning language for fully offline use, open
 **Menu**, answer the adult check, then choose **Download learning words and narration for offline play** and wait for completion. This includes both the learning language and the selected narrator.
 All 2,717 active narration clips are bundled with the app; there is no online speech service at runtime.
 
@@ -101,7 +102,7 @@ reactions from Little Language Quest. The installation icon is an original lette
 using Noto and DejaVu glyphs saved as vector paths. The original family
 photograph is not included. New Bar gesture art was created with built-in imagegen. The gesture atlas and prompt are documented in [BAR_GESTURES.md](art-source/BAR_GESTURES.md). New crying art and 48 additional vocabulary pictures, with their exact prompts, are documented in [DAILY_AND_CRYING.md](art-source/DAILY_AND_CRYING.md).
 
-New narration reuses the established voices: Elvira, Svetlana, Hila, Aria, Xiaoxiao, Nanami,
+New narration reuses the established voices: Elvira, Svetlana, Aria, Xiaoxiao, Nanami,
 Zariyah, Emel and Filipino Blessica. A native-speaker review of new phrase and letter recordings is still recommended.
 
 ## Run, test and publish
@@ -124,11 +125,10 @@ To generate changed narration at development time, install `edge-tts==7.3.1` and
 `scripts/check-audio.py` verifies decodability, duration and audible signal with build-only
 `soundfile` and `numpy` dependencies.
 
-## Free Hebrew voice evaluation
+## Free Hebrew narration
 
-We are evaluating a free, local Hebrew narration replacement. See
-[FREE_HEBREW_VOICES.md](scripts/FREE_HEBREW_VOICES.md) for the candidate and release plan.
-
-[Listen to the free Hebrew voice audition](https://yogurtcp.github.io/bar-word-adventures/voice-preview.html).
-The samples use BlueTTS 2.5 and the existing game pronunciation dictionary;
-the game’s active narration remains unchanged pending a listening review.
+Hebrew uses the approved **female BlueTTS 2.5 voice**, generated locally and bundled
+for offline play. No TTS account, API key or usage fees are required. New audio URLs
+and complete offline caches update installed copies at the normal online startup
+boundary, preserving stars, settings and active work. Other language voices remain
+unchanged. See [voice provenance and local rebuild instructions](scripts/FREE_HEBREW_VOICES.md).
