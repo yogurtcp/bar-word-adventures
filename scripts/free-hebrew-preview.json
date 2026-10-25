@@ -1,0 +1,12 @@
+{
+  "texts": {
+    "instructions": "מָה הָאוֹת הָרִאשׁוֹנָה בַּמִּלָּה הַזֹּאת?",
+    "letters": "אָלֶף. בֵּית. גִּימֶל. דָּלֶת. הֵא. וָו. זַיִן. חֵית.",
+    "words": "בַּרְוָז. גֶּזֶר. חָתוּל. כֶּלֶב. תַּפּוּחַ."
+  },
+  "phonemes": {
+    "instructions": "mˈa haˈot haʁiʃonˈa bamilˈa hazˈot?",
+    "letters": "ˈalef. bˈet. gˈimel. dˈalet. hˈe. vˈav. zˈajin. χˈet.",
+    "words": "baʁvˈaz. gˈezeʁ. χatˈul. kˈelev. tapˈuaχ."
+  }
+}

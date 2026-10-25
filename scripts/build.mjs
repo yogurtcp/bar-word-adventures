@@ -5,7 +5,7 @@ import path from "node:path";
 const root=fileURLToPath(new URL("../",import.meta.url));
 const dist=path.join(root,"dist");
 await rm(dist,{recursive:true,force:true});await mkdir(dist,{recursive:true});
-for(const name of ["src","assets","icons","index.html","styles.css","manifest.webmanifest","update.html"])await cp(path.join(root,name),path.join(dist,name),{recursive:true});
+for(const name of ["src","assets","icons","index.html","styles.css","manifest.webmanifest","update.html","voice-preview.html"])await cp(path.join(root,name),path.join(dist,name),{recursive:true});
 // Bundle active recordings only. Obsolete source-game math audio is never shipped.
 const {audioManifest}=await import("../src/core/audio-manifest.js");
 const audioPaths=[...new Set(Object.values(audioManifest).flatMap(Object.values))];

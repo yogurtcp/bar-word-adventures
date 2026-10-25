@@ -124,8 +124,11 @@ To generate changed narration at development time, install `edge-tts==7.3.1` and
 `scripts/check-audio.py` verifies decodability, duration and audible signal with build-only
 `soundfile` and `numpy` dependencies.
 
-## Selected Hebrew voice upgrade
+## Free Hebrew voice evaluation
 
-Kore is the selected replacement for Hebrew narration. The build-time migration
-and credential setup are documented in [HEBREW_KORE.md](scripts/HEBREW_KORE.md).
-The published voice changes only when the replacement audio is generated and released.
+We are evaluating a free, local Hebrew narration replacement. See
+[FREE_HEBREW_VOICES.md](scripts/FREE_HEBREW_VOICES.md) for the candidate and release plan.
+
+[Listen to the free Hebrew voice audition](https://yogurtcp.github.io/bar-word-adventures/voice-preview.html).
+The samples use BlueTTS 2.5 and the existing game pronunciation dictionary;
+the game’s active narration remains unchanged pending a listening review.
