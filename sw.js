@@ -1,5 +1,5 @@
 // Only this app's caches and requests are handled; other Pages apps share the origin.
-const VERSION = "bar-word-adventures-shell-86b0aabeb393";
+const VERSION = "bar-word-adventures-shell-8c613b8a249a";
 const AUDIO = "bar-word-adventures-audio-v1";
 const CORE = [
   "./",

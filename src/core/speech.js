@@ -135,6 +135,8 @@ export const spoken = {
     letters: [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
   },
 };
+export const letterSpeech = (locale, letter) =>
+  spoken[locale].letters[alphabets[locale].indexOf(letter)];
 export const initialSpeech = (locale, letter) =>
   locale === "zh" ? initialPrompt(letter) : t(
     locale,
