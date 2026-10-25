@@ -19,7 +19,7 @@ test("Hebrew is the default instruction and narrator language, including after u
  saveLanguageSetting('instructions','he');assert.deepEqual(readLanguageSettings(),{instructions:'he',narrator:'en'});
  assert.equal(saved.get('bar-word-adventures-progress-v1'),'{"correct":40}');assert.throws(()=>saveLanguageSetting('narrator','es'),RangeError);
 });
-test("every activity keeps written instructions and narrated guidance independent of all eight learning languages",()=>{
+test("every activity keeps written instructions and narrated guidance independent of all nine learning languages",()=>{
  for(const {code:target} of languages)for(const instructions of ['he','en'])for(const narrator of ['he','en'])for(const game of games)for(const level of [1,2,3])for(let seed=1;seed<=8;seed++){
   const task=game.create({locale:target,level,rng:seeded(seed)}),guidance=taskGuidance(game.id,task,target,instructions,narrator);
   assert.ok(guidance.prompt.length>0);assert.equal(guidance.speech[0].locale,narrator);

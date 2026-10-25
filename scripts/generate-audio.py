@@ -4,7 +4,7 @@ Build-only dependency: edge-tts==7.3.1. No runtime speech service or API keys.
 import asyncio,hashlib,json,pathlib,subprocess,unicodedata
 import edge_tts
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-VOICES={'es':'es-ES-ElviraNeural','ru':'ru-RU-SvetlanaNeural','he':'he-IL-HilaNeural','en':'en-US-AriaNeural','zh':'zh-CN-XiaoxiaoNeural','ja':'ja-JP-NanamiNeural','ar':'ar-SA-ZariyahNeural','tr':'tr-TR-EmelNeural'}
+VOICES={'fil':'fil-PH-BlessicaNeural','es':'es-ES-ElviraNeural','ru':'ru-RU-SvetlanaNeural','he':'he-IL-HilaNeural','en':'en-US-AriaNeural','zh':'zh-CN-XiaoxiaoNeural','ja':'ja-JP-NanamiNeural','ar':'ar-SA-ZariyahNeural','tr':'tr-TR-EmelNeural'}
 catalog=json.loads(subprocess.check_output(['node','scripts/audio-catalog.js'],cwd=ROOT))
 existing=json.loads(subprocess.check_output(['node','--input-type=module','-e',"import {audioManifest} from './src/core/audio-manifest.js';console.log(JSON.stringify(audioManifest))"],cwd=ROOT))
 manifest={locale:{} for locale in catalog}
@@ -23,7 +23,13 @@ async def generate(locale,text):
    for attempt in range(5):
     try:
      tmp=path.with_suffix('.tmp')
-     await edge_tts.Communicate(speech,VOICES[locale],rate='+0%' if locale=='he' else '-12%',volume='-12%').save(str(tmp))
+     rate='+0%' if locale=='he' else '-12%'
+     volume='-12%'
+     if locale=='fil' and text=='Oo!':
+      speech='Oo.'
+      rate='+0%'
+      volume='+0%'
+     await edge_tts.Communicate(speech,VOICES[locale],rate=rate,volume=volume).save(str(tmp))
      if tmp.stat().st_size<1000:raise ValueError('Empty audio')
      tmp.replace(path)
      break

@@ -36,10 +36,17 @@ test("incorrect picture taps say the chosen word without revealing spelling", ()
       assert.equal(host.querySelectorAll(".picture-word").length, 0);
     }
 });
-test("first-letter picture question never supplies the written object name", () => {
-  for (const locale of locales)
+test("first-letter questions keep the same generic instruction across different pictured words", () => {
+  // Whole-word substring checks reject innocent overlaps, such as Spanish pie in empieza.
+  for (const locale of locales) {
+    const prompts = new Set();
+    const words = new Set();
     for (let seed = 1; seed <= 30; seed++) {
       const task = firstLetter.create({ locale, level: 3, rng: seeded(seed) });
-      assert.ok(!task.prompt.includes(word(byId[task.key], locale).display));
+      prompts.add(task.prompt);
+      words.add(word(byId[task.key], locale).display);
     }
+    assert.ok(words.size > 1, locale);
+    assert.equal(prompts.size, 1, `The picture name must not be interpolated into ${locale} instructions`);
+  }
 });

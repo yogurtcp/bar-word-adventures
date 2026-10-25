@@ -21,15 +21,15 @@ function fixture(task,locale) {
  return {host,later,get wins(){return wins;},get misses(){return misses;}};
 }
 test("ten language-only activities and complete content in the requested language order",()=>{
- assert.deepEqual(languages.map(({code})=>code),["es","ru","he","en","zh","ja","ar","tr"]);
+ assert.deepEqual(languages.map(({code})=>code),["es","ru","he","en","zh","ja","ar","tr","fil"]);
  assert.equal(games.length,10);
  assert.ok(games.every(({id})=>!['arithmetic','compare','countGroup','makeAmount','missingNumber','patternNext'].includes(id)));
  for(const {code} of languages){for(const key of Object.keys(lessonCopy.en))assert.equal(typeof lessonCopy[code][key],"string",`${code}/${key}`);for(const game of games)assert.ok(copy[code].gameNames[game.id]);for(const item of concepts)assert.ok(alphabets[code].includes(word(item,code).initial));}
- assert.equal(phrases.length,9);
+ assert.equal(phrases.length,27);
  const categorized=Object.keys(topics).flatMap((topic)=>topicWords(topic).map(({id})=>id));
- assert.equal(categorized.length,86);assert.equal(new Set(categorized).size,86);assert.deepEqual(new Set(categorized),new Set(concepts.map(({id})=>id)));
+ assert.equal(categorized.length,134);assert.equal(new Set(categorized).size,134);assert.deepEqual(new Set(categorized),new Set(concepts.map(({id})=>id)));
 });
-test("all games can be solved at three difficulties in all eight languages; mistakes never block a retry",()=>{
+test("all games can be solved at three difficulties in all nine languages; mistakes never block a retry",()=>{
  for(const game of games)for(const {code:locale} of languages)for(const level of [1,2,3])for(let seed=1;seed<=8;seed++){
   const task=game.create({locale,level,rng:seeded(seed)}),f=fixture(task,locale),buttons=[...f.host.querySelectorAll("button")];
   if(game.id==="wordCards")f.host.querySelector(".said-button").click();

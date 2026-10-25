@@ -16,7 +16,7 @@ export const initialSet = {
         ),
       );
     const others = sample(
-      concepts.filter((item) => word(item, locale).initial !== letter),
+      concepts.filter((item) => item.quiz !== false && word(item, locale).initial !== letter),
       3,
       rng,
     );

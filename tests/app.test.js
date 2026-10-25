@@ -20,8 +20,8 @@ test("children can explore all words, gestures and letters, switch languages mid
    choose(code);assert.ok(document.querySelector('.welcome-screen'));assert.equal(document.documentElement.dir,"rtl");assert.ok(document.querySelector('.welcome-install'));
    assert.equal(document.querySelectorAll('.activity-chip').length,games.length);
    document.querySelector('.shelf-words').click();assert.equal(document.querySelectorAll('.dictionary-card').length,concepts.length);document.querySelector('.dictionary-card').click();assert.equal(spoken.at(-1).locale,code);
-   if(code!=='he')assert.equal(document.querySelectorAll('.word-meaning').length,86);
-   document.querySelector('.home-button').click();document.querySelector('.shelf-phrases').click();assert.equal(document.querySelectorAll('.phrase-card').length,9);assert.equal(document.querySelectorAll('.bar-gesture').length,9);document.querySelector('.phrase-card').click();assert.equal(spoken.at(-1).locale,code);
+   if(code!=='he')assert.equal(document.querySelectorAll('.word-meaning').length,concepts.length);
+   document.querySelector('.home-button').click();document.querySelector('.shelf-phrases').click();assert.equal(document.querySelectorAll('.phrase-card').length,27);assert.equal(document.querySelectorAll('.bar-gesture').length,27);document.querySelector('.phrase-card').click();assert.equal(spoken.at(-1).locale,code);
    document.querySelector('.home-button').click();document.querySelector('.shelf-letters').click();assert.ok(document.querySelectorAll('.alphabet-letter').length>20);assert.ok(document.querySelector('.big-letter'));
    document.querySelector('.home-button').click();
    document.querySelectorAll('.activity-chip')[games.findIndex(({id})=>id==='initialSet')].click();

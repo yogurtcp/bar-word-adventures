@@ -11,7 +11,7 @@ export const memoryPairs = {
       selected.push(
         choose(
           "words",
-          concepts.filter((item) => !selected.includes(item)),
+          concepts.filter((item) => item.quiz !== false && !selected.includes(item)),
         ),
       );
     const cards = shuffle(

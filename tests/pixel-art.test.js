@@ -11,11 +11,12 @@ test("every vocabulary picture has a unique sprite and an offline asset", () => 
   const sw = readFileSync(new URL("../dist/sw.js", import.meta.url), "utf8");
   let bytes = 0;
   for (const sheet of Object.keys(pixelSheets)) {
-    const path = `assets/objects/${sheet}.webp`;
+    const format=Object.values(pixelArtwork).find((sprite)=>sprite.sheet===sheet).format||"webp";
+    const path = `assets/objects/${sheet}.${format}`;
     const size = statSync(new URL(`../${path}`, import.meta.url)).size;
     assert.ok(size > 1000, path);
     assert.ok(sw.includes(`./${path}`), `${path} must work offline`);
     bytes += size;
   }
-  assert.ok(bytes < 1024 * 1024, `Object art should stay under 1 MiB; got ${bytes}`);
+  assert.ok(bytes < 12 * 1024 * 1024, `Object art should stay under 12 MiB; got ${bytes}`);
 });

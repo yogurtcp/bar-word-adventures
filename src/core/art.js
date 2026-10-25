@@ -5,8 +5,12 @@ export function art(id, label = "") {
   const sprite = pixelArtwork[id];
   if (!sprite) throw new Error(`Missing artwork: ${id}`);
   const { sheet, column, row } = sprite;
-  const source = new URL(`../../assets/objects/${sheet}.webp`, import.meta.url).href;
+  const source = new URL(`../../assets/objects/${sheet}.${sprite.format || "webp"}`, import.meta.url).href;
   const safeLabel = String(label).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  if (sprite.crop) {
+    const [x,y,width,height] = sprite.crop;
+    return `<svg class="art pixel-art" viewBox="0 0 ${width} ${height}" role="img" aria-label="${safeLabel}"><svg width="${width}" height="${height}" overflow="hidden"><image href="${source}" x="${-x}" y="${-y}" width="${sprite.sourceWidth}" height="${sprite.sourceHeight}"/></svg></svg>`;
+  }
   return `<svg class="art pixel-art" viewBox="0 0 1 1" role="img" aria-label="${safeLabel}"><svg x="0" y="0" width="1" height="1" overflow="hidden"><image href="${source}" x="${-column}" y="${-row}" width="4" height="4"/></svg></svg>`;
 }
 

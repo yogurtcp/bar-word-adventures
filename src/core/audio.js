@@ -15,6 +15,7 @@ export class GameAudio {
     this.voices = [];
     this.generation = 0;
     this.sources = new Set();
+    this.effects = new Set();
     this.buffers = new Map();
     this.utterance = null;
     this.onStatus = () => {};
@@ -72,6 +73,8 @@ export class GameAudio {
     this.generation++;
     for (const source of this.sources) source.stop();
     this.sources.clear();
+    for (const oscillator of this.effects) oscillator.stop();
+    this.effects.clear();
     window.speechSynthesis?.cancel();
     this.utterance = null;
     this.notify(this.muted ? "muted" : "idle");
@@ -232,6 +235,8 @@ export class GameAudio {
     if (!this.context || this.muted || this.context.state !== "running") return;
     const oscillator = this.context.createOscillator(),
       volume = this.context.createGain();
+    this.effects.add(oscillator);
+    oscillator.onended = () => this.effects.delete(oscillator);
     oscillator.type = "sine";
     oscillator.frequency.setValueAtTime(frequency, when);
     volume.gain.setValueAtTime(0.001, when);
@@ -252,6 +257,14 @@ export class GameAudio {
       [523, 659, 784, 1047].forEach((note, i) =>
         this.tone(note, now + i * 0.12, 0.25),
       );
+    else if (kind === "crying") {
+      // A quiet descending, sob-like melody lasting most of the three-second pause.
+      [392, 349, 311, 330, 294, 262, 233].forEach((note, index) =>
+        this.tone(note, now + index * 0.36, 0.42, 0.035),
+      );
+      this.tone(196, now + 0.1, 0.5, 0.018);
+      this.tone(175, now + 1.55, 0.6, 0.018);
+    }
     else {
       this.tone(320, now, 0.14, 0.035);
       this.tone(270, now + 0.1, 0.14, 0.025);

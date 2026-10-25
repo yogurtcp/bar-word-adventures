@@ -6,7 +6,7 @@ A separate, child-friendly language-learning app starring Bar. Learn everyday wo
 expressions, gestures and letters with pictures, recorded voices and gentle rewards.
 There are no math activities, accounts, ads, microphone recordings or pronunciation scores.
 
-Language order: **Spanish, Russian, Hebrew, English, Mandarin Chinese, Japanese, Arabic, Turkish**.
+Language order: **Spanish, Russian, Hebrew, English, Mandarin Chinese, Japanese, Arabic, Turkish, Filipino**.
 Choose a learning language on launch. **Instructions and menus default to Hebrew**, with English
 as the other option. **Narrator language** is a separate Hebrew/English setting and also defaults
 to Hebrew. Both controls are available on the launch screen, home screen and in the adult menu. The globe button switches languages during play and starts a fresh question.
@@ -19,9 +19,9 @@ and language switches; existing stars, volume and progress are retained.
 
 ## Explore, then practise
 
-- **Picture words:** 86 illustrated words in six themes. Tap to hear a word; its spelling,
+- **Picture words:** 134 illustrated words in 13 themes. Tap to hear a word; its spelling,
   translation in the instruction language and Mandarin pinyin are visible. No stars or tests in the dictionary.
-- **Talk with Bar:** nine everyday expressions, including hello, goodbye, yes, no, please
+- **Talk with Bar:** 27 everyday expressions, including hello, goodbye, yes, no, please
   and thank you. Eight two-frame Bar gesture loops invite imitation. These are ordinary
   expressive gestures, not formal sign language. Speaking practice is self-reported.
 - **Letter garden:** tap a native letter, pinyin unit or kana to hear it and see matching words.
@@ -41,6 +41,29 @@ completed Arabic/Hebrew words in their native direction. Beginner tasks show the
 harder tasks offer a hint. Mistakes invite another try and never remove stars. Five completions
 earn a star. Difficulty advances independently per language and skill after unassisted success.
 
+## Immediate mistake feedback
+
+In **First Letter** and **Build a Word**, every wrong answer immediately shows a large
+crying Bar animation with a quiet sad melody. The whole game screen is locked for exactly
+three seconds, then the same question resumes. Rapid extra taps cannot add penalties or
+advance the answer during that pause. There are no hearts, streak penalties or lost stars.
+Mute/volume and reduced-motion preferences remain respected.
+
+## Everyday vocabulary and Filipino
+
+The new topics include people and family (child, boy, girl, baby, mother, father), body parts,
+everyday objects (water, door, soap, toilet, phone), actions, feelings, opposites (big/little,
+hot/cold, clean/dirty) and colours. The phrase book adds greetings, good morning/night,
+apologies, asking for help or water, introducing yourself and other everyday expressions.
+People, actions and adjective pictures that can overlap in meaning are taught in naming,
+spelling and first-letter listening; they are excluded from picture-only distractor pools.
+
+Filipino has all 134 words and 27 expressions, its own recorded voice, and the 28-letter
+alphabet. `Ñ` and `NG` stay distinct, including `NG` tiles inside words. Sources:
+[KWF orthography](https://www.kwf.gov.ph/wp-content/uploads/Ortograpiyang_Pambansa_1.pdf),
+[NCCA alphabet](https://ncca.gov.ph/about-ncca-3/subcommissions/subcommission-on-cultural-disseminationscd/language-and-translation/orthography-evolution/),
+[Microsoft voice support](https://learn.microsoft.com/en-us/azure/ai-services/Speech-Service/language-support).
+
 ## Install, audio and offline use
 
 Open the public HTTPS app, choose a language and tap **Install app** on the home screen.
@@ -51,7 +74,7 @@ Installation availability depends on the browser and OS.
 The entire app shell, all picture atlases, Bar animations and icons cache for offline launches.
 Narration is downloaded as used. To prepare a learning language for fully offline use, open
 **Menu**, answer the adult check, then choose **Download learning words and narration for offline play** and wait for completion. This includes both the learning language and the selected narrator.
-All 1,876 active narration clips are bundled with the app; there is no online speech service at runtime.
+All 2,717 active narration clips are bundled with the app; there is no online speech service at runtime.
 
 Settings include volume, three difficulty levels, a gentle-motion switch, optional portrait reactions,
 voice testing, a reproducible Game Lab and progress reset. OS reduced-motion preferences are respected.
@@ -72,11 +95,10 @@ progress, content decks and settings. It never migrates, resets or rewrites save
 
 Reused assets: 86 pixel-art objects, recorded vocabulary/instructions and six generated Bar portrait
 reactions from Little Language Quest; installation icons from Bar’s Adventures. The original family
-photograph is not included. New Bar gesture art was created with built-in imagegen. The final atlas,
-frame map and exact generation prompt are documented in [BAR_GESTURES.md](art-source/BAR_GESTURES.md).
+photograph is not included. New Bar gesture art was created with built-in imagegen. The gesture atlas and prompt are documented in [BAR_GESTURES.md](art-source/BAR_GESTURES.md). New crying art and 48 additional vocabulary pictures, with their exact prompts, are documented in [DAILY_AND_CRYING.md](art-source/DAILY_AND_CRYING.md).
 
 New narration reuses the established voices: Elvira, Svetlana, Hila, Aria, Xiaoxiao, Nanami,
-Zariyah and Emel. A native-speaker review of new phrase and letter recordings is still recommended.
+Zariyah, Emel and Filipino Blessica. A native-speaker review of new phrase and letter recordings is still recommended.
 
 ## Run, test and publish
 
