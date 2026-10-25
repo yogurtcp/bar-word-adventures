@@ -23,6 +23,10 @@ test("children can explore all words, gestures and letters, switch languages mid
    if(code!=='he')assert.equal(document.querySelectorAll('.word-meaning').length,86);
    document.querySelector('.home-button').click();document.querySelector('.shelf-phrases').click();assert.equal(document.querySelectorAll('.phrase-card').length,9);assert.equal(document.querySelectorAll('.bar-gesture').length,9);document.querySelector('.phrase-card').click();assert.equal(spoken.at(-1).locale,code);
    document.querySelector('.home-button').click();document.querySelector('.shelf-letters').click();assert.ok(document.querySelectorAll('.alphabet-letter').length>20);assert.ok(document.querySelector('.big-letter'));
+   document.querySelector('.home-button').click();
+   document.querySelectorAll('.activity-chip')[games.findIndex(({id})=>id==='letterOrder')].click();
+   const opening=spoken.at(-1);assert.equal(opening.text[0].locale,'he');assert.ok(opening.text.length>=4);assert.ok(opening.text.slice(1).every((part)=>part.locale===code));
+   document.querySelector('.replay-button').click();assert.deepEqual(spoken.at(-1),opening);
    document.querySelector('.home-button').click();document.querySelector('.play-button').click();assert.ok(document.querySelector('.game-screen'));const oldStops=stops;document.querySelector('.language-switch').click();assert.ok(stops>oldStops);assert.equal(document.querySelectorAll('dialog').length,0);
    choose(code);assert.ok(document.querySelector('.game-screen'),'language selection returns directly to a fresh question');document.querySelector('.home-button').click();document.querySelector('.language-switch').click();
   }

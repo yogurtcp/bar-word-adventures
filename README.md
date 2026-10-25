@@ -29,6 +29,8 @@ and language switches; existing stars, volume and progress are retained.
 - **Practice:** picture naming, listen-and-choose, picture-to-word matching, word/picture memory,
   first letters, shared starting letters, building words, letter order, clue cards and gesture matching.
   Choose a specific activity on the home screen or play a shuffled mix of all ten.
+  Letter-order prompts say the letters in order in the learning language; replay repeats them,
+  and every letter tap says that letter’s name, including mistakes.
 
 Word building uses whole grapheme clusters, keeping combining marks attached, and shapes
 completed Arabic/Hebrew words in their native direction. Beginner tasks show the target spelling;

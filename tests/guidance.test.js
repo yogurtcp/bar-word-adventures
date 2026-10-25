@@ -26,6 +26,7 @@ test("every activity keeps written instructions and narrated guidance independen
   for(const {locale,text} of guidance.speech)assert.ok(audioManifest[locale]?.[text],`${game.id}/${target}/${instructions}/${narrator}/${text}`);
   if(instructions==='he')assert.match(guidance.prompt,/\p{Script=Hebrew}/u);else assert.doesNotMatch(guidance.prompt,/[\p{Script=Hebrew}\p{Script=Arabic}\p{Script=Han}\p{Script=Hiragana}\p{Script=Cyrillic}]/u);
   if(['wordCards','buildWord','firstLetter','listenChoose','gestureChoose','initialSet'].includes(game.id))assert.equal(guidance.speech[1].locale,target);
+  else if(game.id==='letterOrder'){assert.equal(guidance.speech.length,task.answer.length+1);assert.ok(guidance.speech.slice(1).every((part)=>part.locale===target));}
   else assert.equal(guidance.speech.length,1);
   if(game.id==='initialSet'){assert.equal(guidance.prompt,settingsCopy[instructions].initialSound);assert.equal(guidance.targetSound,task.key);}
  }
