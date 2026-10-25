@@ -2,7 +2,7 @@ import { t } from "./i18n.js";
 import { lessonText, phrases } from "./lessons.js";
 import { clues } from "./clues.js";
 import { byId, word, alphabets } from "./content.js";
-import { spoken, letterSpeech } from "./speech.js";
+import { spoken, letterSpeech, unitSpeech } from "./speech.js";
 import { settingsCopy, supportLanguage } from "./language-settings.js";
 
 // Guidance uses a known language. The item being taught keeps its native recording.
@@ -31,6 +31,8 @@ export function taskGuidance(gameId, task, target, instructions = "he", narrator
   if (["wordCards", "buildWord", "firstLetter", "listenChoose"].includes(gameId)) speech.push(cue(word(byId[task.key], target).speech, target));
   if (gameId === "gestureChoose") speech.push(cue(phrases.find(({id}) => id === task.key).words[target], target));
   if (gameId === "initialSet") speech.push(cue(spoken[target].letters[alphabets[target].indexOf(task.key)], target));
+  if (gameId === "firstLetter") speech.push(...task.options.map((letter) => cue(letterSpeech(target, letter), target)));
+  if (gameId === "buildWord") speech.push(...task.options.map(({ text }) => cue(unitSpeech(target, text), target)));
   if (gameId === "letterOrder") speech.push(...task.answer.map((letter) => cue(letterSpeech(target, letter), target)));
   return { prompt, speech, targetSound: gameId === "initialSet" ? task.key : null };
 }

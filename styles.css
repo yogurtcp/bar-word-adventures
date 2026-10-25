@@ -1267,3 +1267,5 @@ body { background: radial-gradient(ellipse at 2% 4%, #d7f0c3 0, transparent 40%)
   .language-setting { min-width:125px; flex:1; }
   .language-choices .language-choice { grid-template-columns:32px minmax(0,1fr); font-size:15px; }
 }
+
+.target-sound-button { display:block; margin:0 auto 15px; min-width:75px; min-height:60px; padding:8px 18px; background:#e6efdb; color:#29413b; border:2px solid #b8cebd; border-radius:18px; }

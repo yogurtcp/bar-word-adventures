@@ -1,3 +1,6 @@
+import { unitSpeech } from "../core/speech.js";
+import { graphemes } from "../core/writing.js";
+export { graphemes } from "../core/writing.js";
 import { concepts, word } from "../core/content.js";
 import { lessonText, phrases } from "../core/lessons.js";
 import { pick, sample, shuffle, node, button } from "../core/helpers.js";
@@ -5,9 +8,6 @@ import { picture, grid, tile, appendWord, revealWord } from "./shared.js";
 import { art } from "../core/art.js";
 import { barGesture } from "../ui/bar.js";
 import { direction } from "../core/i18n.js";
-export function graphemes(text, locale) {
-  return typeof Intl.Segmenter === "function" ? [...new Intl.Segmenter(locale, {granularity: "grapheme"}).segment(text)].map(({segment}) => segment) : text.match(/\P{M}\p{M}*/gu) || [];
-}
 const chooseWord = (choose, rng) => choose ? choose("words", concepts) : pick(concepts, rng);
 export const wordCards = {
  id: "wordCards",
@@ -54,9 +54,11 @@ export const buildWord = {
     const area=grid(host,"word-pieces");area.dir=direction(locale);let placed=[];
     for(const option of options){const element=tile(option.text===" "?"␣":option.text,()=>{
       if(api.isComplete?.()||element.disabled)return;
-      if(option.text!==parts[placed.length])return api.wrong(element);
+      const pronunciation = unitSpeech(locale, option.text);
+      if(option.text!==parts[placed.length]){api.audio.speak(pronunciation,locale);return api.wrong(element);}
       placed.push({element,text:option.text});element.disabled=true;answer.textContent=placed.map(({text})=>text).join("");
-      if(placed.length===parts.length){revealWord(hero,item,api);api.complete();}
+      if(placed.length===parts.length){revealWord(hero,item,api,{beforeSpeech:[pronunciation]});api.complete();}
+      else api.audio.speak(pronunciation,locale);
     },"letter-tile");element.dataset.part=option.index;area.append(element);}
     host.append(button("text-button instruction-control",lessonText(api.instructionLocale || "he","hint"),()=>{scaffold.hidden=false;api.hint?.();}),button("text-button instruction-control",lessonText(api.instructionLocale || "he","backspace"),()=>{if(api.isComplete?.())return;const last=placed.pop();if(last)last.element.disabled=false;answer.textContent=placed.map(({text})=>text).join("");}));
    }
