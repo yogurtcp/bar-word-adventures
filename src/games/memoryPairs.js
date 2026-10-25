@@ -66,7 +66,7 @@ export const memoryPairs = {
               } else {
                 const pair = open;
                 pendingMismatch = pair;
-                api.wrong(null, false);
+                api.wrong();
                 api.later(() => hideMismatch(pair), 1100);
               }
             }

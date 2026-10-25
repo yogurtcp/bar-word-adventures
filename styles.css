@@ -1223,7 +1223,7 @@ button:disabled {
 /* Bar’s Word Adventures: a playful language studio. */
 :root { background: #f5fbf5; color: #263d39; }
 body { background: radial-gradient(ellipse at 2% 4%, #d7f0c3 0, transparent 40%), radial-gradient(ellipse at 95% 80%, #fbe5c7 0, transparent 45%), #f5fbf5; }
-.brand-mark { background: #c5e4aa; border-color: #29413b; }
+.brand-mark { background: #125458; border: 0; border-radius: 11px; transform: none; }
 .brand-name { max-width: 290px; }
 .word-welcome { display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; margin: 30px 0 20px; border: 2px solid #c9dec7; border-radius: 34px; padding: 28px 32px; background: #fffdf5; box-shadow: 0 7px 0 #dbe8d6; }
 .eyebrow { display:inline-block; padding:7px 12px; border-radius:20px; background:#e5efda; font-weight:800; }

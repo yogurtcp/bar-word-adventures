@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {parseHTML} from "linkedom";
 import {TaskLifetime} from "../src/core/lifecycle.js";
-import {createMistakePause,MISTAKE_PAUSE_MS,strictActivities} from "../src/ui/mistake-pause.js";
+import {createMistakePause,MISTAKE_PAUSE_MS} from "../src/ui/mistake-pause.js";
 import {GameAudio} from "../src/core/audio.js";
 
 function clock(){let now=0,index=0;const tasks=new Map(),oldSet=globalThis.setTimeout,oldClear=globalThis.clearTimeout;globalThis.setTimeout=(fn,delay)=>{tasks.set(++index,{fn,at:now+delay});return index;};globalThis.clearTimeout=(id)=>tasks.delete(id);return{tick(ms){now+=ms;for(const [id,entry] of [...tasks])if(entry.at<=now){tasks.delete(id);entry.fn();}},restore(){globalThis.setTimeout=oldSet;globalThis.clearTimeout=oldClear;}};}
@@ -25,7 +25,6 @@ test("leaving a task removes its crying overlay and cancels its timer without ch
   assert.equal(pause.active,false);assert.equal(screen.inert,false);assert.equal(host.querySelector('.mistake-overlay'),null);host.append(document.createElement('main'));time.tick(10000);assert.equal(resumed,0);assert.equal(pause.start(),false);
  }finally{time.restore();}
 });
-test("only First Letter and Build a Word get the requested immediate pause",()=>assert.deepEqual([...strictActivities],['firstLetter','buildWord']));
 test("sad sounds last through the pause, respect mute and volume, and stop with a screen change",()=>{
  const oldWindow=globalThis.window;globalThis.window={};try{
   const audio=new GameAudio(),notes=[],stopped=[];

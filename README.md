@@ -43,7 +43,7 @@ earn a star. Difficulty advances independently per language and skill after unas
 
 ## Immediate mistake feedback
 
-In **First Letter** and **Build a Word**, every wrong answer immediately shows a large
+In every activity, each wrong answer (including a mismatched memory pair) immediately shows a large
 crying Bar animation with a quiet sad melody. The whole game screen is locked for exactly
 three seconds, then the same question resumes. Rapid extra taps cannot add penalties or
 advance the answer during that pause. There are no hearts, streak penalties or lost stars.
@@ -68,7 +68,10 @@ alphabet. `Ñ` and `NG` stay distinct, including `NG` tiles inside words. Source
 
 Open the public HTTPS app, choose a language and tap **Install app** on the home screen.
 On Android Chrome, confirm the native install prompt. On iPhone/iPad, use Safari’s
-**Share → Add to Home Screen**. The installed app has its own **Bar Words** icon and standalone window.
+**Share → Add to Home Screen**. The installed app has its own **Bar Words** letter-tile icon and standalone window.
+The icon includes Spanish Ñ, Russian Б, Hebrew א, English A, Chinese 中, Japanese あ,
+Arabic ب, Turkish Ğ and Filipino Ng. Its original vector source is [letters-v1.svg](icons/letters-v1.svg);
+[generate-icons.py](scripts/generate-icons.py) creates the Android, desktop and iOS PNGs.
 Installation availability depends on the browser and OS.
 
 The entire app shell, all picture atlases, Bar animations and icons cache for offline launches.
@@ -94,7 +97,8 @@ progress, content decks and settings. It never migrates, resets or rewrites save
 [Bar’s Adventures](https://yogurtcp.github.io/bar-adventures/).
 
 Reused assets: 86 pixel-art objects, recorded vocabulary/instructions and six generated Bar portrait
-reactions from Little Language Quest; installation icons from Bar’s Adventures. The original family
+reactions from Little Language Quest. The installation icon is an original letter-tile design
+using Noto and DejaVu glyphs saved as vector paths. The original family
 photograph is not included. New Bar gesture art was created with built-in imagegen. The gesture atlas and prompt are documented in [BAR_GESTURES.md](art-source/BAR_GESTURES.md). New crying art and 48 additional vocabulary pictures, with their exact prompts, are documented in [DAILY_AND_CRYING.md](art-source/DAILY_AND_CRYING.md).
 
 New narration reuses the established voices: Elvira, Svetlana, Hila, Aria, Xiaoxiao, Nanami,
