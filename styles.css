@@ -1269,3 +1269,12 @@ body { background: radial-gradient(ellipse at 2% 4%, #d7f0c3 0, transparent 40%)
 }
 
 .target-sound-button { display:block; margin:0 auto 15px; min-width:75px; min-height:60px; padding:8px 18px; background:#e6efdb; color:#29413b; border:2px solid #b8cebd; border-radius:18px; }
+
+.mistake-overlay { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:20px; background:rgb(31 43 60 / .76); touch-action:none; }
+.mistake-card { display:flex; flex-direction:column; align-items:center; width:min(90vw,440px); padding:24px; background:#f5f0ff; border:3px solid #b8a9cb; border-radius:32px; box-shadow:0 15px 70px #14202b66; }
+.bar-crying { width:min(75vw,340px); aspect-ratio:1; background:url('./assets/bar/crying-v1.png') no-repeat 0 0 / 200% 100%; animation:bar-cry 600ms steps(1,end) infinite; }
+@keyframes bar-cry { 0%,49.99% {background-position:0 0;} 50%,100% {background-position:100% 0;} }
+.mistake-message { font-size:24px; font-weight:800; color:#4f4b69; text-align:center; line-height:1.6; margin:10px 0 18px; }
+.mistake-timer { width:100%; height:7px; border-radius:10px; background:#a8a0c7; transform-origin:center; animation:mistake-wait 3s linear forwards; }
+@keyframes mistake-wait { to { transform:scaleX(0); } }
+@media(prefers-reduced-motion:reduce) { .bar-crying,.mistake-timer { animation:none; } }

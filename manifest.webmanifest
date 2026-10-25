@@ -1,7 +1,7 @@
 {
   "name": "Bar’s Word Adventures",
   "short_name": "Bar Words",
-  "description": "Everyday words, gestures, listening and letters with Bar in eight languages",
+  "description": "Everyday words, gestures, listening and letters with Bar in nine languages",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

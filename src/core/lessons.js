@@ -1,8 +1,10 @@
+import { dailyTopics, dailyTopicLabels, dailyExpressions } from "./daily.js";
 import { concepts, word } from "./content.js";
 import { copy } from "./i18n.js";
 
 const keys = ["appName","tagline","words","phrases","letters","helper","noHelper","home","sayIt","heard","showMeaning","wordChoice","buildWord","gestureChoose","gesturePrompt","allTopics","animals","food","homeThings","nature","travel","playThings","backspace","hint","tapLearn","gestureNote","reducedMotion"];
 const rows = {
+  fil: ["Mga Salita kasama si Bar","Maliliit na salita, malalaking tuklas.","Mga salitang may larawan","Makipag-usap kay Bar","Hardin ng mga titik","Tulong sa","Walang salin","Bahay","Makinig, pagkatapos ay subukang sabihin ang salita.","Nasabi ko na!","Ipakita ang kahulugan","Aling salita ang katugma ng larawan?","Ayusin ang mga bahagi para mabuo ang salita.","Mga kilos ni Bar","Makinig at piliin ang ginagawa ni Bar.","Lahat ng larawan","Mga hayop","Pagkain at inumin","Sa bahay","Sa labas","Sa paglalakbay","Laro at damit","Ibalik","Ipakita ang pahiwatig","Pindutin ang larawan para marinig ang pangalan nito.","Gayahin ang mga pang-araw-araw na kilos ni Bar at sabihin ang mga salita. Walang mikropono o pagmamarka sa pagbigkas.","Banayad na galaw"],
   en: ["Words with Bar","Little words. Big discoveries.","Picture words","Talk with Bar","Letter garden","Help in","No translation","Home","Listen, then try saying the word.","I said it!","Show meaning","Which word matches this picture?","Put the pieces in order to make the word.","Bar’s gestures","Listen and choose what Bar is doing.","All pictures","Animals","Food and drinks","At home","Outside","On the move","Play and wear","Undo","Show a hint","Tap a picture to hear its name.","Copy Bar’s everyday gestures and say the words. No microphone or speech scoring.","Gentle motion"],
   es: ["Palabras con Bar","Pequeñas palabras, grandes descubrimientos.","Palabras en imágenes","Habla con Bar","Jardín de letras","Ayuda en","Sin traducción","Inicio","Escucha y luego intenta decir la palabra.","¡Ya lo dije!","Mostrar el significado","¿Qué palabra corresponde a esta imagen?","Ordena las piezas para formar la palabra.","Los gestos de Bar","Escucha y elige lo que hace Bar.","Todas las imágenes","Animales","Comida y bebidas","En casa","Al aire libre","De viaje","Juegos y ropa","Deshacer","Mostrar una pista","Toca una imagen para escuchar su nombre.","Imita los gestos cotidianos de Bar y di las palabras. Sin micrófono ni evaluación del habla.","Movimiento suave"],
   ru: ["Слова с Баром","Маленькие слова, большие открытия.","Слова в картинках","Говорим с Баром","Сад букв","Подсказки на языке","Без перевода","Домой","Послушай и попробуй произнести слово.","Я сказал!","Показать перевод","Какое слово подходит к картинке?","Собери слово из частей.","Жесты Бара","Послушай и выбери, что делает Бар.","Все картинки","Животные","Еда и напитки","Дома","На улице","В пути","Игры и одежда","Отменить","Показать подсказку","Нажми на картинку, чтобы услышать слово.","Повторяй обычные жесты Бара и произноси слова. Без микрофона и оценки произношения.","Спокойное движение"],
@@ -14,12 +16,14 @@ const rows = {
 };
 export const lessonCopy = Object.fromEntries(Object.entries(rows).map(([locale, values]) => [locale, Object.fromEntries(keys.map((key, i) => [key, values[i]]))]));
 for (const [locale, ui] of Object.entries(lessonCopy)) {
+  Object.assign(ui,dailyTopicLabels[locale]);
   copy[locale].appName = ui.appName;
   Object.assign(copy[locale].gameNames, { wordCards: ui.words, wordChoice: ui.wordChoice, buildWord: ui.buildWord, gestureChoose: ui.gestureChoose });
 }
 export const lessonText = (locale, key) => lessonCopy[locale][key];
 const phraseIds = ["hello","goodbye","yes","no","listen","look","wellDone","thankYou","please"];
 const phraseRows = {
+ fil:["Kumusta!","Paalam!","Oo!","Hindi!","Makinig!","Tingnan!","Magaling!","Salamat!","Pakiusap!"],
  en:["Hello!","Goodbye!","Yes!","No!","Listen!","Look!","Well done!","Thank you!","Please!"],
  es:["¡Hola!","¡Adiós!","¡Sí!","¡No!","¡Escucha!","¡Mira!","¡Muy bien!","¡Gracias!","¡Por favor!"],
  ru:["Привет!","Пока!","Да!","Нет!","Послушай!","Посмотри!","Молодец!","Спасибо!","Пожалуйста!"],
@@ -30,7 +34,9 @@ const phraseRows = {
  tr:["Merhaba!","Hoşça kal!","Evet!","Hayır!","Dinle!","Bak!","Aferin!","Teşekkür ederim!","Lütfen!"],
 };
 export const phrases = phraseIds.map((id, index) => ({ id, gesture: id === "goodbye" ? "hello" : id, words: Object.fromEntries(Object.entries(phraseRows).map(([locale, values]) => [locale, values[index]])) }));
+phrases.push(...dailyExpressions);
 export const topics = {
+ ...dailyTopics,
  animals: "dog cat cow duck fish rabbit bear lion elephant giraffe monkey horse sheep pig mouse frog turtle butterfly bee snail bird rooster penguin",
  food: "juice sausage banana milk chocolate candy cake apple pear orange lemon strawberry grapes watermelon carrot tomato cucumber bread cheese egg icecream pizza",
  homeThings: "house window clock book key chair bed cup spoon brush pencil scissors",

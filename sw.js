@@ -1,10 +1,14 @@
 // Only this app's caches and requests are handled; other Pages apps share the origin.
-const VERSION = "bar-word-adventures-shell-5fa6e90bd937";
+const VERSION = "bar-word-adventures-shell-f97ef137fba7";
 const AUDIO = "bar-word-adventures-audio-v1";
 const CORE = [
   "./",
+  "./assets/bar/crying-v1.png",
   "./assets/bar/gestures-v1.png",
   "./assets/objects/animals.webp",
+  "./assets/objects/daily-actions.png",
+  "./assets/objects/daily-opposites.png",
+  "./assets/objects/daily-people.png",
   "./assets/objects/extras.webp",
   "./assets/objects/food.webp",
   "./assets/objects/home.webp",
@@ -27,6 +31,8 @@ const CORE = [
   "./src/core/audio.js",
   "./src/core/clues.js",
   "./src/core/content.js",
+  "./src/core/daily-crops.js",
+  "./src/core/daily.js",
   "./src/core/guidance.js",
   "./src/core/helpers.js",
   "./src/core/i18n.js",
@@ -52,11 +58,13 @@ const CORE = [
   "./src/games/shared.js",
   "./src/locales/ar.js",
   "./src/locales/es.js",
+  "./src/locales/fil.js",
   "./src/locales/ja.js",
   "./src/locales/tr.js",
   "./src/locales/zh.js",
   "./src/main.js",
   "./src/ui/bar.js",
+  "./src/ui/mistake-pause.js",
   "./src/ui/parents.js",
   "./src/ui/reactions.js",
   "./src/ui/volume.js",

@@ -1,3 +1,5 @@
+import { dailyWords } from "./daily.js";
+import * as filipino from "../locales/fil.js";
 import * as spanish from "../locales/es.js";
 import * as arabic from "../locales/ar.js";
 import * as turkish from "../locales/tr.js";
@@ -9,6 +11,7 @@ const item = (id, ru, he, en, initials, facts = []) => ({
   art: id,
   facts,
   words: {
+    fil: { display: filipino.vocabulary[id], speech: filipino.vocabulary[id], initial: filipino.initial(filipino.vocabulary[id]) },
     es: { display: spanish.vocabulary[id], speech: spanish.vocabulary[id], initial: spanish.initial(spanish.vocabulary[id]) },
     ar: { display: arabic.vocabulary[id], speech: arabic.vocabulary[id], initial: arabic.initial(arabic.vocabulary[id]) },
     tr: { display: turkish.vocabulary[id], speech: turkish.vocabulary[id], initial: turkish.initial(turkish.vocabulary[id]) },
@@ -148,10 +151,27 @@ export const concepts = [
   item("mushroom", "гриб", "פִּטְרִיָּה", "mushroom", ["Г", "פ", "M"]),
   item("shell", "ракушка", "צְדָפָה", "shell", ["Р", "צ", "S"]),
 ];
+// Extend the original picture vocabulary without changing any existing IDs.
+for (const entry of dailyWords) {
+  const words = Object.fromEntries(Object.entries(entry.translations).map(([locale,display]) => {
+    let initial;
+    if (locale === "zh") initial = entry.pinyin.normalize("NFD").replace(/\p{M}/gu, "").match(/^(zh|ch|sh|[a-z])/u)[0];
+    else if (locale === "he") initial = [...display.replace(/\p{M}/gu, "")][0];
+    else if (locale === "ar") initial = arabic.initial(display);
+    else if (locale === "tr") initial = turkish.initial(display);
+    else if (locale === "es") initial = spanish.initial(display);
+    else if (locale === "fil") initial = filipino.initial(display);
+    else if (locale === "ja") initial = [...display][0];
+    else initial = [...display][0].toLocaleUpperCase(locale);
+    return [locale,{display,speech:display,initial,...(locale==="zh"?{reading:entry.pinyin}:{})}];
+  }));
+  concepts.push({id:entry.id,art:entry.id,facts:[],quiz:entry.quiz,words});
+}
 export const byId = Object.fromEntries(
   concepts.map((concept) => [concept.id, concept]),
 );
 export const alphabets = {
+  fil: filipino.alphabet,
   es: spanish.alphabet,
   ar: arabic.alphabet,
   tr: turkish.alphabet,
@@ -162,6 +182,7 @@ export const alphabets = {
   en: [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 };
 export const earlyLetters = {
+  fil: filipino.early,
   es: spanish.early,
   ar: arabic.early,
   tr: turkish.early,
@@ -172,6 +193,7 @@ export const earlyLetters = {
   en: ["A", "B", "C", "D", "E", "F", "H", "M", "S"],
 };
 export const earlyRuns = {
+  fil: filipino.rows,
   es: spanish.rows,
   ar: arabic.rows,
   tr: turkish.rows,
@@ -212,7 +234,7 @@ export function word(concept, locale) {
 export const literacyRows = { zh: chinese.rows, ja: japanese.rows };
 export function groups(locale) {
   const result = new Map();
-  for (const concept of concepts) {
+  for (const concept of concepts.filter((item) => item.quiz !== false)) {
     const initial = word(concept, locale).initial;
     result.set(initial, [...(result.get(initial) || []), concept]);
   }

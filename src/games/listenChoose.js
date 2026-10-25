@@ -5,12 +5,13 @@ import { grid, picture, revealWord, wrongPicture } from "./shared.js";
 export const listenChoose = {
   id: "listenChoose",
   create({ locale, rng, choose = (_key, pool) => pick(pool, rng) }) {
-    const answer = choose("words", concepts);
+    const pool = concepts.filter((item) => item.quiz !== false);
+    const answer = choose("words", pool);
     const options = shuffle(
       [
         answer,
         ...sample(
-          concepts.filter((item) => item.id !== answer.id),
+          pool.filter((item) => item.id !== answer.id),
           3,
           rng,
         ),

@@ -1,3 +1,4 @@
+import { createMistakePause, strictActivities } from "./ui/mistake-pause.js";
 import { readLanguageSettings, saveLanguageSetting, settingsCopy, supportLanguages } from "./core/language-settings.js";
 import { taskGuidance } from "./core/guidance.js";
 import { lessonText, phrases, topics, topicWords, appleInstallHelp } from "./core/lessons.js";
@@ -321,26 +322,36 @@ function startTask({ gameId = activeGame, seed = null, practice = false } = {}) 
     feedback = node("div", "feedback");
   feedback.setAttribute("aria-live", "polite");
   stage.append(field, feedback);
+  const mistakePause = strictActivities.has(selected.game.id)
+    ? createMistakePause({ host: app, screen, lifetime: taskLife, audio, locale: uiLocale,
+        onResume() { reaction.set("thinking"); } })
+    : null;
+  const blocked = () => complete || !taskLife.alive || Boolean(mistakePause?.active);
   const api = {
     locale,
     helperLocale: uiLocale,
     instructionLocale: uiLocale,
     audio,
-    hint() { misses++; },
-    isComplete: () => complete || !taskLife.alive,
+    hint() { if (!blocked()) misses++; },
+    isComplete: blocked,
     later: (fn, delay) => taskLife.later(fn, delay),
     encourage() {
-      if (!complete && taskLife.alive) {
+      if (!blocked()) {
         reaction.set("happy", 2400);
         feedback.textContent = t(uiLocale, "good");
         feedback.className = "feedback success";
       }
     },
     wrong(element) {
-      if (complete || !taskLife.alive) return;
+      if (blocked()) return;
       misses++;
-      reaction.set(misses % 2 ? "sad" : "oops", 2400);
-      audio.effect("wrong");
+      if (mistakePause) {
+        reaction.set("sad");
+        mistakePause.start();
+      } else {
+        reaction.set(misses % 2 ? "sad" : "oops", 2400);
+        audio.effect("wrong");
+      }
       feedback.textContent = t(uiLocale, "try");
       feedback.className = "feedback retry";
       if (element) {
@@ -350,7 +361,7 @@ function startTask({ gameId = activeGame, seed = null, practice = false } = {}) 
       }
     },
     complete() {
-      if (complete || !taskLife.alive) return;
+      if (blocked()) return;
       complete = true;
       reaction.set("happy");
       audio.effect("right");
@@ -445,6 +456,7 @@ async function installApp() {
   }
 }
 document.addEventListener("keydown", (event) => {
+  if (app.querySelector(".mistake-overlay")) return;
   if (
     locale &&
     event.altKey &&

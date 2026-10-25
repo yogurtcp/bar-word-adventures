@@ -1,3 +1,4 @@
+import { speech as filipino } from "../locales/fil.js";
 import { graphemes } from "./writing.js";
 import { settingsCopy } from "./language-settings.js";
 import { lessonText, phrases } from "./lessons.js";
@@ -10,6 +11,7 @@ import { clues } from "./clues.js";
 import { speech as chinese, initialPrompt } from "../locales/zh.js";
 import { speech as japanese, quantity as japaneseQuantity } from "../locales/ja.js";
 export const spoken = {
+  fil: filipino,
   es: spanish,
   ar: arabic,
   tr: turkish,
@@ -141,6 +143,7 @@ export const letterSpeech = (locale, letter) =>
 // Word-building tiles include lower case, accents, final forms and non-alphabet characters.
 const extraUnitNames = {
   es: { " ": "espacio", "á": "a con tilde", "é": "e con tilde", "í": "i con tilde", "ó": "o con tilde", "ú": "u con tilde", "ü": "u con diéresis" },
+  fil: { " ": "puwang" },
   en: { " ": "space" }, ru: { " ": "пробел" }, tr: { " ": "boşluk" },
   he: { " ": "רֶוַח", "ך": "כָּף סוֹפִית", "ם": "מֵם סוֹפִית", "ן": "נוּן סוֹפִית", "ף": "פֵּא סוֹפִית", "ץ": "צָדִי סוֹפִית", "׳": "גֵּרֵשׁ" },
   ar: { " ": "مَسَافَة", "أ": "أَلِف بِهَمْزَة", "إ": "أَلِف بِهَمْزَة", "آ": "أَلِف مَمْدُودَة", "ؤ": "وَاو بِهَمْزَة", "ئ": "يَاء بِهَمْزَة", "ة": "تَاء مَرْبُوطَة", "ى": "أَلِف مَقْصُورَة", "ء": "هَمْزَة" },
@@ -152,7 +155,7 @@ export function unitSpeech(locale, unit) {
   if (["he", "ar"].includes(locale)) normalized = normalized.replace(/\p{M}/gu, "");
   const extra = extraUnitNames[locale]?.[normalized];
   if (extra) return extra;
-  const letter = ["en", "es", "ru", "tr"].includes(locale) ? normalized.toLocaleUpperCase(locale) : normalized;
+  const letter = ["en", "es", "ru", "tr", "fil"].includes(locale) ? normalized.toLocaleUpperCase(locale) : normalized;
   // Mandarin characters and kana are pronounced in their native writing system.
   return letterSpeech(locale, letter) || normalized;
 }

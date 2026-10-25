@@ -26,7 +26,7 @@ export const wordCards = {
 export const wordChoice = {
  id: "wordChoice",
  create({locale,rng,choose}) {
-  const item=chooseWord(choose,rng), options=shuffle([item,...sample(concepts.filter((entry)=>entry.id!==item.id),3,rng)],rng);
+  const pool=concepts.filter((entry)=>entry.quiz!==false), item=choose?choose("words",pool):pick(pool,rng), options=shuffle([item,...sample(pool.filter((entry)=>entry.id!==item.id),3,rng)],rng);
   return {key:item.id,answer:item.id,options:options.map(({id})=>id),prompt:lessonText(locale,"wordChoice"),speech:lessonText(locale,"wordChoice"),
    render(host,api) {
     const hero=node("div","hero-art");hero.innerHTML=art(item.id,word(item,locale).display);host.append(hero);
@@ -60,7 +60,7 @@ export const buildWord = {
       if(placed.length===parts.length){revealWord(hero,item,api,{beforeSpeech:[pronunciation]});api.complete();}
       else api.audio.speak(pronunciation,locale);
     },"letter-tile");element.dataset.part=option.index;area.append(element);}
-    host.append(button("text-button instruction-control",lessonText(api.instructionLocale || "he","hint"),()=>{scaffold.hidden=false;api.hint?.();}),button("text-button instruction-control",lessonText(api.instructionLocale || "he","backspace"),()=>{if(api.isComplete?.())return;const last=placed.pop();if(last)last.element.disabled=false;answer.textContent=placed.map(({text})=>text).join("");}));
+    host.append(button("text-button instruction-control",lessonText(api.instructionLocale || "he","hint"),()=>{if(api.isComplete?.())return;scaffold.hidden=false;api.hint?.();}),button("text-button instruction-control",lessonText(api.instructionLocale || "he","backspace"),()=>{if(api.isComplete?.())return;const last=placed.pop();if(last)last.element.disabled=false;answer.textContent=placed.map(({text})=>text).join("");}));
    }
   };
  }
@@ -68,7 +68,7 @@ export const buildWord = {
 export const gestureChoose = {
  id:"gestureChoose",
  create({locale,rng,choose}) {
-  const pool=phrases.filter(({id})=>id!=="goodbye"), target=choose?choose("phrases",pool):pick(pool,rng), options=shuffle([target,...sample(pool.filter(({id})=>id!==target.id),3,rng)],rng);
+  const pool=phrases.filter(({id,quiz})=>id!=="goodbye"&&quiz!==false), target=choose?choose("phrases",pool):pick(pool,rng), options=shuffle([target,...sample(pool.filter(({id})=>id!==target.id),3,rng)],rng);
   return {key:target.id,answer:target.id,options:options.map(({id})=>id),prompt:lessonText(locale,"gesturePrompt"),speech:[lessonText(locale,"gesturePrompt"),target.words[locale]],
    render(host,api) {
     const area=grid(host,"gesture-grid");

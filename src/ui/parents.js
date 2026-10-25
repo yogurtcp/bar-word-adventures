@@ -168,7 +168,7 @@ export function createParentUI(app) {
     panel.append(button("secondary-button", t(locale, "update"), () => {
       location.href = `./update.html?lang=${locale}`;
     }));
-    panel.append(node("p", "panel-note", "Bar Words · 1.1.1"));
+    panel.append(node("p", "panel-note", "Bar Words · 1.2"));
     app.audio.onStatus = (value) => {
       status.textContent =
         value === "error"
