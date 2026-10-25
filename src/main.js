@@ -1,4 +1,4 @@
-import { createMistakePause, strictActivities } from "./ui/mistake-pause.js";
+import { createMistakePause } from "./ui/mistake-pause.js";
 import { readLanguageSettings, saveLanguageSetting, settingsCopy, supportLanguages } from "./core/language-settings.js";
 import { taskGuidance } from "./core/guidance.js";
 import { lessonText, phrases, topics, topicWords, appleInstallHelp } from "./core/lessons.js";
@@ -110,7 +110,7 @@ function languageControls({ refresh = welcome, includeTarget = true } = {}) {
 function header({ parent = true, playing = false } = {}) {
   const bar = node("header", "topbar"),
     brand = node("div", "brand");
-  brand.innerHTML = '<span class="brand-mark" aria-hidden="true">✦</span>';
+  brand.innerHTML = '<img class="brand-mark" src="./icons/letters-v1-192.png" alt="" width="37" height="37" />';
   brand.append(node("span", "brand-name", t(uiLocale, "appName")));
   bar.append(brand);
   if (parent) {
@@ -322,11 +322,11 @@ function startTask({ gameId = activeGame, seed = null, practice = false } = {}) 
     feedback = node("div", "feedback");
   feedback.setAttribute("aria-live", "polite");
   stage.append(field, feedback);
-  const mistakePause = strictActivities.has(selected.game.id)
-    ? createMistakePause({ host: app, screen, lifetime: taskLife, audio, locale: uiLocale,
-        onResume() { reaction.set("thinking"); } })
-    : null;
-  const blocked = () => complete || !taskLife.alive || Boolean(mistakePause?.active);
+  const mistakePause = createMistakePause({
+    host: app, screen, lifetime: taskLife, audio, locale: uiLocale,
+    onResume() { reaction.set("thinking"); },
+  });
+  const blocked = () => complete || !taskLife.alive || mistakePause.active;
   const api = {
     locale,
     helperLocale: uiLocale,
@@ -345,13 +345,8 @@ function startTask({ gameId = activeGame, seed = null, practice = false } = {}) 
     wrong(element) {
       if (blocked()) return;
       misses++;
-      if (mistakePause) {
-        reaction.set("sad");
-        mistakePause.start();
-      } else {
-        reaction.set(misses % 2 ? "sad" : "oops", 2400);
-        audio.effect("wrong");
-      }
+      reaction.set("sad");
+      mistakePause.start();
       feedback.textContent = t(uiLocale, "try");
       feedback.className = "feedback retry";
       if (element) {

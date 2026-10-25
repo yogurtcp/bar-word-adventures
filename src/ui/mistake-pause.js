@@ -1,6 +1,5 @@
 import { node } from "../core/helpers.js";
 export const MISTAKE_PAUSE_MS = 3000;
-export const strictActivities = new Set(["firstLetter", "buildWord"]);
 export function createMistakePause({ host, screen, lifetime, audio, locale, onResume = () => {} }) {
   let active = false, overlay = null, priorInert = false, returnFocus = null;
   function finish(restoreFocus = true) {

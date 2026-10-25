@@ -1,5 +1,5 @@
 // Only this app's caches and requests are handled; other Pages apps share the origin.
-const VERSION = "bar-word-adventures-shell-f97ef137fba7";
+const VERSION = "bar-word-adventures-shell-f9362a993452";
 const AUDIO = "bar-word-adventures-audio-v1";
 const CORE = [
   "./",
@@ -20,9 +20,10 @@ const CORE = [
   "./assets/reactions/sad.webp",
   "./assets/reactions/surprised.webp",
   "./assets/reactions/thinking.webp",
-  "./icons/bar-180.png",
-  "./icons/bar-192.png",
-  "./icons/bar-512.png",
+  "./icons/letters-v1-180.png",
+  "./icons/letters-v1-192.png",
+  "./icons/letters-v1-512.png",
+  "./icons/letters-v1.svg",
   "./index.html",
   "./manifest.webmanifest",
   "./src/core/art.js",
