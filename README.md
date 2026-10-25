@@ -123,3 +123,9 @@ To generate changed narration at development time, install `edge-tts==7.3.1` and
 `python scripts/generate-audio.py`. Only authored game text goes to the speech service.
 `scripts/check-audio.py` verifies decodability, duration and audible signal with build-only
 `soundfile` and `numpy` dependencies.
+
+## Selected Hebrew voice upgrade
+
+Kore is the selected replacement for Hebrew narration. The build-time migration
+and credential setup are documented in [HEBREW_KORE.md](scripts/HEBREW_KORE.md).
+The published voice changes only when the replacement audio is generated and released.
